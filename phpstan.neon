@@ -1,0 +1,32 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+
+    excludePaths:
+        - vendor
+
+    strictRules:
+        allRules: false
+        disallowedLooseComparison: true
+        booleansInConditions: true
+        uselessCast: true
+        requireParentConstructorCall: false
+        disallowedConstructs: true
+        overwriteVariablesWithLoop: true
+        closureUsesThis: true
+        matchingInheritedMethodNames: true
+        numericOperandsInArithmeticOperators: true
+        strictCalls: true
+
+    reportUnmatchedIgnoredErrors: true
+    checkMissingIterableValueType: true
+    checkGenericClassInNonGenericObjectType: true
+    checkMissingCallableSignature: true
+
+    treatPhpDocTypesAsCertain: false
+    rememberPossiblyImpureFunctionValues: false
