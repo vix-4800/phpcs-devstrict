@@ -15,6 +15,7 @@ This document describes the custom coding standard rules implemented in the DevS
   - [Yii2](#yii2)
     - [DevStrict.Yii2.DisallowResponseFormatAssignment](#devstrictyii2disallowresponseformatassignment)
     - [DevStrict.Yii2.PreferActiveRecordShortcuts](#devstrictyii2preferactiverecordshortcuts)
+    - [DevStrict.Yii2.PreferMagicProperties](#devstrictyii2prefermagicproperties)
 
 ---
 
@@ -276,6 +277,70 @@ class UserController extends Controller
 }
 ```
 
-**Note:** This rule **only** triggers for the exact pattern `find()->where()->one()` or `find()->where()->all()` with
+> [!NOTE]
+> This rule **only** triggers for the exact pattern `find()->where()->one()` or `find()->where()->all()` with
 nothing in between. If you have additional method calls like `andWhere()`, `orWhere()`, `orderBy()`, `limit()`, etc.,
 the warning will not be triggered because these complex queries cannot be simplified to `findOne()`/`findAll()`.
+
+---
+
+### DevStrict.Yii2.PreferMagicProperties
+
+**Type:** Warning
+
+**Description:** Suggests using magic properties instead of getter methods in Yii2. Yii2 components support magic
+properties through the `__get()` method, allowing you to access getters as properties for cleaner and more readable code.
+This applies to getters that start with `get`, `is`, or `can` and have no arguments.
+
+**Bad:**
+
+```php
+class UserController extends Controller
+{
+    public function actionProfile()
+    {
+        $userId = Yii::$app->user->getId();
+        $identity = Yii::$app->user->getIdentity();
+        $isGuest = Yii::$app->user->getIsGuest();
+
+        $user = User::findOne($userId);
+        $name = $user->getName();
+        $email = $user->getEmail();
+        $status = $user->getStatus();
+
+        return $this->render('profile', [
+            'name' => $name,
+            'email' => $email,
+        ]);
+    }
+}
+```
+
+**Good:**
+
+```php
+class UserController extends Controller
+{
+    public function actionProfile()
+    {
+        $userId = Yii::$app->user->id;
+        $identity = Yii::$app->user->identity;
+        $isGuest = Yii::$app->user->isGuest;
+
+        $user = User::findOne($userId);
+        $name = $user->name;
+        $email = $user->email;
+        $status = $user->status;
+
+        return $this->render('profile', [
+            'name' => $name,
+            'email' => $email,
+        ]);
+    }
+}
+```
+
+> [!NOTE]
+> This rule only triggers for getters with no arguments. If a getter requires parameters (e.g.,
+`getUrl($scheme)` or `getValue($key, $default)`), the warning will not be triggered because such methods cannot be
+replaced with property access.
