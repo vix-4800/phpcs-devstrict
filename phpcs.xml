@@ -19,6 +19,7 @@
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/bin/*</exclude-pattern>
     <exclude-pattern>*/cache/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
 
     <!-- Set PHP version -->
     <config name="php_version" value="70400" />
