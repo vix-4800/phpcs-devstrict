@@ -11,6 +11,7 @@ This document describes the custom coding standard rules implemented in the DevS
     - [DevStrict.Functions.DisallowCompact](#devstrictfunctionsdisallowcompact)
   - [Control Structures](#control-structures)
     - [DevStrict.ControlStructures.DisallowThrowInTernary](#devstrictcontrolstructuresdisallowthrowinternary)
+    - [DevStrict.ControlStructures.UseInArray](#devstrictcontrolstructuresuseinarray)
 
 ---
 
@@ -118,4 +119,38 @@ if (!$isValid) {
     throw new RuntimeException('Invalid data');
 }
 $data = getData();
+```
+
+---
+
+### DevStrict.ControlStructures.UseInArray
+
+**Type:** Warning
+
+**Description:** Detects multiple OR/AND comparisons of the same variable and suggests using `in_array()` or
+`!in_array()` instead. This makes the code more concise, readable, and easier to maintain. The sniff triggers when
+there are 3 or more comparisons of the same variable.
+
+**Bad:**
+
+```php
+if ($site_id === 1 || $site_id === 2 || $site_id === 3) {
+    // do something
+}
+
+if ($status !== 'pending' && $status !== 'processing' && $status !== 'cancelled') {
+    // do something
+}
+```
+
+**Good:**
+
+```php
+if (in_array($site_id, [1, 2, 3], true)) {
+    // do something
+}
+
+if (!in_array($status, ['pending', 'processing', 'cancelled'], true)) {
+    // do something
+}
 ```

@@ -1,0 +1,201 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DevStrict\Sniffs\ControlStructures;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
+
+/**
+ * Detects multiple OR/AND comparisons of the same variable and suggests using in_array() or !in_array().
+ *
+ * This sniff detects patterns like:
+ * $var === Value1 || $var === Value2 || $var === Value3
+ * $var !== Value1 && $var !== Value2 && $var !== Value3
+ *
+ * And suggests using:
+ * in_array($var, [Value1, Value2, Value3], true)
+ * !in_array($var, [Value1, Value2, Value3], true)
+ */
+class UseInArraySniff implements Sniff
+{
+    /**
+     * Minimum number of comparisons to trigger the sniff.
+     */
+    public int $minComparisons = 3;
+
+    /**
+     * Returns an array of tokens this test wants to listen for.
+     *
+     * @return array<int|string>
+     */
+    public function register(): array
+    {
+        return [T_IS_IDENTICAL, T_IS_NOT_IDENTICAL];
+    }
+
+    /**
+     * Processes this test when one of its tokens is encountered.
+     */
+    public function process(File $phpcsFile, int $stackPtr): void
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        $leftVar = $this->getComparisonVariable($phpcsFile, $stackPtr, true);
+
+        if ($leftVar === null) {
+            return;
+        }
+
+        $comparisonType = $tokens[$stackPtr]['code'];
+        $isIdentical = ($comparisonType === T_IS_IDENTICAL);
+
+        $comparisons = [$stackPtr];
+        $expectedLogicalOperator = $isIdentical ? T_BOOLEAN_OR : T_BOOLEAN_AND;
+
+        $currentPtr = $stackPtr;
+
+        while (true) {
+            $logicalOperator = $this->findNextLogicalOperator($phpcsFile, $currentPtr);
+
+            if ($logicalOperator === false || $tokens[$logicalOperator]['code'] !== $expectedLogicalOperator) {
+                break;
+            }
+
+            $nextComparison = $this->findNextComparison($phpcsFile, $logicalOperator, $comparisonType);
+
+            if ($nextComparison === false) {
+                break;
+            }
+
+            $nextVar = $this->getComparisonVariable($phpcsFile, $nextComparison, true);
+
+            if ($nextVar === null || $nextVar !== $leftVar) {
+                break;
+            }
+
+            $comparisons[] = $nextComparison;
+            $currentPtr = $nextComparison;
+        }
+
+        if (count($comparisons) >= $this->minComparisons) {
+            $operator = $isIdentical ? 'OR (||)' : 'AND (&&)';
+            $function = $isIdentical ? 'in_array()' : '!in_array()';
+
+            $warning = sprintf(
+                'Multiple %s comparisons detected (%d comparisons). Consider using %s instead',
+                $operator,
+                count($comparisons),
+                $function
+            );
+
+            $phpcsFile->addWarning($warning, $stackPtr, 'Found');
+        }
+    }
+
+    /**
+     * Gets the variable name being compared.
+     *
+     * @param bool $left True to get left side, false to get right side
+     *
+     * @return string|null The variable name or null if not found
+     */
+    private function getComparisonVariable(File $phpcsFile, int $comparisonPtr, bool $left): ?string
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        if ($left) {
+            $varPtr = $phpcsFile->findPrevious(T_WHITESPACE, $comparisonPtr - 1, null, true);
+        } else {
+            $varPtr = $phpcsFile->findNext(T_WHITESPACE, $comparisonPtr + 1, null, true);
+        }
+
+        if ($varPtr === false || !isset($tokens[$varPtr])) {
+            return null;
+        }
+
+        $varTokens = [];
+        $ptr = $varPtr;
+
+        if ($left) {
+            while ($ptr !== false && isset($tokens[$ptr])) {
+                $code = $tokens[$ptr]['code'];
+
+                if (
+                    in_array($code, [
+                        T_VARIABLE,
+                        T_STRING,
+                        T_OBJECT_OPERATOR,
+                        T_DOUBLE_COLON,
+                        T_NULLSAFE_OBJECT_OPERATOR,
+                    ], true)
+                ) {
+                    $varTokens[] = $tokens[$ptr]['content'];
+                    $ptr = $phpcsFile->findPrevious(T_WHITESPACE, $ptr - 1, null, true);
+                } else {
+                    break;
+                }
+            }
+
+            $varTokens = array_reverse($varTokens);
+        } else {
+            while ($ptr !== false && isset($tokens[$ptr])) {
+                $code = $tokens[$ptr]['code'];
+
+                if (
+                    in_array($code, [
+                        T_VARIABLE,
+                        T_STRING,
+                        T_OBJECT_OPERATOR,
+                        T_DOUBLE_COLON,
+                        T_NULLSAFE_OBJECT_OPERATOR,
+                    ], true)
+                ) {
+                    $varTokens[] = $tokens[$ptr]['content'];
+                    $ptr = $phpcsFile->findNext(T_WHITESPACE, $ptr + 1, null, true);
+                } else {
+                    break;
+                }
+            }
+        }
+
+        if ($varTokens === []) {
+            return null;
+        }
+
+        return implode('', $varTokens);
+    }
+
+    /**
+     * Finds the next logical operator (|| or &&) after the current position.
+     *
+     * @return false|int Position of the logical operator or false if not found
+     */
+    private function findNextLogicalOperator(File $phpcsFile, int $stackPtr): int|false
+    {
+        return $phpcsFile->findNext(
+            [T_BOOLEAN_OR, T_BOOLEAN_AND],
+            $stackPtr + 1,
+            null,
+            false
+        );
+    }
+
+    /**
+     * Finds the next comparison of the specified type after the current position.
+     *
+     * @param int $comparisonType The comparison type to look for (T_IS_IDENTICAL or T_IS_NOT_IDENTICAL)
+     *
+     * @return false|int Position of the comparison or false if not found
+     */
+    private function findNextComparison(File $phpcsFile, int $stackPtr, int $comparisonType): int|false
+    {
+        return $phpcsFile->findNext(
+            $comparisonType,
+            $stackPtr + 1,
+            null,
+            false
+        );
+    }
+}
