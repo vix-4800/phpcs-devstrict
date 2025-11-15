@@ -33,7 +33,7 @@
     },
     "autoload": {
         "psr-4": {
-            "DevStrict\\": "src/"
+            "DevStrict\\": "src/DevStrict/"
         }
     },
     "autoload-dev": {
