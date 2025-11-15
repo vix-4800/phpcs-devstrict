@@ -37,13 +37,13 @@ class DisallowCompactSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
         $token = $tokens[$stackPtr];
 
-        if (mb_strtolower((string) $token['content']) !== 'compact') {
+        if (!isset($token['content']) || mb_strtolower((string) $token['content']) !== 'compact') {
             return;
         }
 
         $prevToken = $phpcsFile->findPrevious(T_WHITESPACE, $stackPtr - 1, null, true);
 
-        if ($prevToken !== false) {
+        if ($prevToken !== false && isset($tokens[$prevToken])) {
             $prevTokenCode = $tokens[$prevToken]['code'];
 
             if (in_array($prevTokenCode, [T_OBJECT_OPERATOR, T_DOUBLE_COLON], true)) {
@@ -57,7 +57,7 @@ class DisallowCompactSniff implements Sniff
 
         $nextToken = $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
 
-        if ($nextToken === false || $tokens[$nextToken]['code'] !== T_OPEN_PARENTHESIS) {
+        if ($nextToken === false || !isset($tokens[$nextToken]) || $tokens[$nextToken]['code'] !== T_OPEN_PARENTHESIS) {
             return;
         }
 
