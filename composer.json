@@ -2,6 +2,12 @@
     "name": "devstrict/phpcs",
     "description": "Custom PHP_CodeSniffer ruleset for strict development standards",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Anton VIX",
+            "email": "Gordan.ei@protonmail.ch"
+        }
+    ],
     "type": "phpcodesniffer-standard",
     "keywords": [
         "phpcs",
