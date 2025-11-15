@@ -20,7 +20,7 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "dealerdirect/phpcodesniffer-composer-installer": "^1.2.0",
-        "squizlabs/php_codesniffer": "^4.0.0"
+        "squizlabs/php_codesniffer": "^4.0.1"
     },
     "require-dev": {
         "captainhook/captainhook": "^5.25.0",
