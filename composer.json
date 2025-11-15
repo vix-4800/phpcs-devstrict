@@ -1,17 +1,21 @@
 {
     "name": "devstrict/phpcs",
-    "description": "",
+    "description": "Custom PHP_CodeSniffer ruleset for strict development standards",
     "license": "MIT",
     "type": "phpcodesniffer-standard",
     "keywords": [
         "phpcs",
-        "dev"
+        "dev",
+        "code-sniffer",
+        "coding-standards",
+        "static-analysis"
     ],
     "prefer-stable": true,
     "config": {
         "bin-dir": "bin",
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
         }
     },
     "require": {
@@ -20,7 +24,12 @@
         "squizlabs/php_codesniffer": "^4.0.0"
     },
     "require-dev": {
-        "captainhook/captainhook": "^5.25"
+        "captainhook/captainhook": "^5.25",
+        "phpstan/phpstan": "^2.0",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "phpunit/phpunit": "^9.5 || ^10.0 || ^11.0"
     },
     "autoload": {
         "psr-4": {
@@ -33,6 +42,17 @@
         }
     },
     "scripts": {
-        "post-autoload-dump": "vendor/bin/captainhook install --only-enabled -f -s"
+        "post-autoload-dump": "bin/captainhook install --only-enabled -f -s",
+        "test": "phpunit",
+        "phpcs": "phpcs",
+        "phpcbf": "phpcbf",
+        "phpstan": "phpstan analyse --memory-limit=1G",
+        "cs-fix": "php-cs-fixer fix",
+        "cs-fix-dry": "php-cs-fixer fix --dry-run --diff",
+        "check": [
+            "@phpcs",
+            "@phpstan",
+            "@test"
+        ]
     }
 }
