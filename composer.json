@@ -19,7 +19,9 @@
         "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7 || ^1.1.2",
         "squizlabs/php_codesniffer": "^4.0.0"
     },
-    "require-dev": {},
+    "require-dev": {
+        "captainhook/captainhook": "^5.25"
+    },
     "autoload": {
         "psr-4": {
             "DevStrict\\": "src/"
@@ -29,5 +31,8 @@
         "psr-4": {
             "DevStrict\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "post-autoload-dump": "vendor/bin/captainhook install --only-enabled -f -s"
     }
 }
