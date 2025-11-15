@@ -75,6 +75,7 @@ Rules for Yii2 framework:
 - `DevStrict.Yii2.DisallowResponseFormatAssignment` - Use controller methods like `asJson()` instead of direct assignment
 - `DevStrict.Yii2.PreferActiveRecordShortcuts` - Suggest `findOne()`/`findAll()` over `find()->where()->one()/all()`
 - `DevStrict.Yii2.PreferMagicProperties` - Use magic properties instead of getter methods for cleaner code
+- `DevStrict.Yii2.PreferExistsOverCount` - Use `exists()` instead of `count() > 0` for better performance
 
 ## Development
 

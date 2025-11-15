@@ -16,6 +16,7 @@ This document describes the custom coding standard rules implemented in the DevS
     - [DevStrict.Yii2.DisallowResponseFormatAssignment](#devstrictyii2disallowresponseformatassignment)
     - [DevStrict.Yii2.PreferActiveRecordShortcuts](#devstrictyii2preferactiverecordshortcuts)
     - [DevStrict.Yii2.PreferMagicProperties](#devstrictyii2prefermagicproperties)
+    - [DevStrict.Yii2.PreferExistsOverCount](#devstrictyii2preferexistsovercount)
 
 ---
 
@@ -344,3 +345,61 @@ class UserController extends Controller
 > This rule only triggers for getters with no arguments. If a getter requires parameters (e.g.,
 `getUrl($scheme)` or `getValue($key, $default)`), the warning will not be triggered because such methods cannot be
 replaced with property access.
+
+---
+
+### DevStrict.Yii2.PreferExistsOverCount
+
+**Type:** Warning
+
+**Description:** Suggests using `exists()` instead of `count() > 0` and similar patterns for ActiveQuery existence
+checks. The `exists()` method is more efficient than `count()` when you only need to check if any records exist,
+as it stops after finding the first match instead of counting all records.
+
+**Bad:**
+
+```php
+class UserController extends Controller
+{
+    public function actionCheck()
+    {
+        if (User::find()->where(['status' => 1])->count() > 0) {
+            return 'Has active users';
+        }
+
+        if ($query->count() >= 1) {
+            // do something
+        }
+
+        if ($query->count() == 0) {
+            return 'No records';
+        }
+
+        $hasRecords = Post::find()->where(['published' => true])->count() !== 0;
+    }
+}
+```
+
+**Good:**
+
+```php
+class UserController extends Controller
+{
+    public function actionCheck()
+    {
+        if (User::find()->where(['status' => 1])->exists()) {
+            return 'Has active users';
+        }
+
+        if ($query->exists()) {
+            // do something
+        }
+
+        if (!$query->exists()) {
+            return 'No records';
+        }
+
+        $hasRecords = Post::find()->where(['published' => true])->exists();
+    }
+}
+```

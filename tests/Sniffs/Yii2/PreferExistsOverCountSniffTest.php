@@ -1,0 +1,283 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DevStrict\Tests\Common\Sniffs\Yii2;
+
+use DevStrict\Tests\BaseTest;
+
+/**
+ * Tests for PreferExistsOverCountSniff.
+ */
+class PreferExistsOverCountSniffTest extends BaseTest
+{
+    /**
+     * Test that count() > 0 triggers a warning.
+     */
+    public function testCountGreaterThanZeroTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if ($query->count() > 0) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use ...->exists() instead of count() > 0');
+    }
+
+    /**
+     * Test that count() >= 1 triggers a warning.
+     */
+    public function testCountGreaterOrEqualOneTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if ($query->count() >= 1) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use ...->exists() instead of count() >= 1');
+    }
+
+    /**
+     * Test that count() != 0 triggers a warning.
+     */
+    public function testCountNotEqualZeroTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if ($query->count() != 0) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use ...->exists() instead of count() != 0');
+    }
+
+    /**
+     * Test that count() !== 0 triggers a warning.
+     */
+    public function testCountNotIdenticalZeroTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if ($query->count() !== 0) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use ...->exists() instead of count() !== 0');
+    }
+
+    /**
+     * Test that count() == 0 triggers a warning with negation.
+     */
+    public function testCountEqualZeroTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if ($query->count() == 0) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use !...->exists() instead of count() == 0');
+    }
+
+    /**
+     * Test that count() === 0 triggers a warning with negation.
+     */
+    public function testCountIdenticalZeroTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if ($query->count() === 0) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use !...->exists() instead of count() === 0');
+    }
+
+    /**
+     * Test that count() < 1 triggers a warning with negation.
+     */
+    public function testCountLessThanOneTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if ($query->count() < 1) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use !...->exists() instead of count() < 1');
+    }
+
+    /**
+     * Test that count() <= 0 triggers a warning with negation.
+     */
+    public function testCountLessOrEqualZeroTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if ($query->count() <= 0) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use !...->exists() instead of count() <= 0');
+    }
+
+    /**
+     * Test with full query chain.
+     */
+    public function testFullQueryChainTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if (User::find()->where(["status" => 1])->count() > 0) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use ...->exists() instead of count() > 0');
+    }
+
+    /**
+     * Test in ternary operator.
+     */
+    public function testInTernaryOperatorTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+$hasUsers = $query->count() > 0 ? "yes" : "no";', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use ...->exists() instead of count() > 0');
+    }
+
+    /**
+     * Test that count() with arguments does NOT trigger a warning.
+     */
+    public function testCountWithArgumentsDoesNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+$count = $query->count("*");', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertNoViolations($result);
+    }
+
+    /**
+     * Test that count() with different comparison does NOT trigger a warning.
+     */
+    public function testCountWithDifferentComparisonDoesNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if ($query->count() > 5) {
+    // do something
+}
+
+if ($query->count() >= 10) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertNoViolations($result);
+    }
+
+    /**
+     * Test that count() without comparison does NOT trigger a warning.
+     */
+    public function testCountWithoutComparisonDoesNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+$count = $query->count();
+echo $count;', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertNoViolations($result);
+    }
+
+    /**
+     * Test that count() function (not method) does NOT trigger a warning.
+     */
+    public function testCountFunctionDoesNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if (count($array) > 0) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertNoViolations($result);
+    }
+
+    /**
+     * Test that exists() does NOT trigger a warning.
+     */
+    public function testExistsDoesNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if ($query->exists()) {
+    // do something
+}
+
+if (!$query->exists()) {
+    // do something else
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertNoViolations($result);
+    }
+
+    /**
+     * Test static method call does NOT trigger a warning.
+     */
+    public function testStaticMethodCallDoesNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if (SomeClass::count() > 0) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertNoViolations($result);
+    }
+
+    /**
+     * Test multiple violations in one file.
+     */
+    public function testMultipleViolations(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if ($query1->count() > 0) {
+    // do something
+}
+
+if ($query2->count() === 0) {
+    // do something else
+}
+
+$result = $query3->count() >= 1 ? "found" : "not found";', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'count() > 0');
+        $this->assertContainsWarning($result, 'count() === 0');
+        $this->assertContainsWarning($result, 'count() >= 1');
+    }
+
+    /**
+     * Test negation patterns.
+     */
+    public function testNegationPatterns(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+// Should suggest !exists()
+if ($query->count() == 0) {
+    echo "no records";
+}
+
+// Should suggest exists()
+if ($query->count() > 0) {
+    echo "has records";
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, '!...->exists()');
+        $this->assertContainsWarning($result, '...->exists()');
+    }
+}
