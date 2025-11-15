@@ -6,4 +6,8 @@
     <rule ref="DevStrict.Functions.DisallowIsNull">
         <type>warning</type>
     </rule>
+
+    <rule ref="DevStrict.ControlStructures.DisallowThrowInTernary">
+        <type>error</type>
+    </rule>
 </ruleset>
