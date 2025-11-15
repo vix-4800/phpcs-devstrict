@@ -28,7 +28,8 @@
         "phpstan/extension-installer": "^1.4.0",
         "phpstan/phpstan-strict-rules": "^2.0.0",
         "friendsofphp/php-cs-fixer": "^3.89.0",
-        "phpunit/phpunit": "^12.4.0"
+        "phpunit/phpunit": "^12.4.0",
+        "slevomat/coding-standard": "^8.24"
     },
     "autoload": {
         "psr-4": {
