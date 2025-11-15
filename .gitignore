@@ -1,14 +1,12 @@
 # Composer
 composer.phar
 /vendor/
-/bin/
 composer.lock
 
 # PHPUnit
 /.phpunit.result.cache
 /coverage/
 /coverage.xml
-/phpunit.xml
 
 # PHPStan
 /phpstan.neon.dist
