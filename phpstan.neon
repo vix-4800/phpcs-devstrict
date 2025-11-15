@@ -1,6 +1,3 @@
-includes:
-    - vendor/phpstan/phpstan-strict-rules/rules.neon
-
 parameters:
     level: 8
     paths:
@@ -10,23 +7,15 @@ parameters:
     excludePaths:
         - vendor
 
-    strictRules:
-        allRules: false
-        disallowedLooseComparison: true
-        booleansInConditions: true
-        uselessCast: true
-        requireParentConstructorCall: false
-        disallowedConstructs: true
-        overwriteVariablesWithLoop: true
-        closureUsesThis: true
-        matchingInheritedMethodNames: true
-        numericOperandsInArithmeticOperators: true
-        strictCalls: true
+    bootstrapFiles:
+        - phpstan-bootstrap.php
 
+    scanDirectories:
+        - vendor/squizlabs/php_codesniffer/src
+
+    # Report all errors
     reportUnmatchedIgnoredErrors: true
-    checkMissingIterableValueType: true
-    checkGenericClassInNonGenericObjectType: true
     checkMissingCallableSignature: true
 
+    # Additional checks
     treatPhpDocTypesAsCertain: false
-    rememberPossiblyImpureFunctionValues: false
