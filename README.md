@@ -53,13 +53,29 @@ Create a `phpcs.xml` file in your project root:
 
 ### DevStrict/Common
 
+Core rules applicable to all PHP projects. See [RULES.md](RULES.md) for detailed documentation of each rule.
+
+**Includes:**
+
+- `DevStrict.Functions.DisallowIsNull` - Prefer `=== null` over `is_null()`
+- `DevStrict.Functions.DisallowCompact` - Disallow `compact()` function usage
+- `DevStrict.ControlStructures.DisallowThrowInTernary` - No exceptions in ternary operators
+- `DevStrict.ControlStructures.UseInArray` - Suggest `in_array()` for multiple OR comparisons
+
 ### DevStrict/Laravel
 
-Laravel-specific rules:
+Laravel-specific rules (coming soon).
 
 ### DevStrict/Yii
 
 Rules for Yii2 framework:
+
+**Includes:**
+
+- `DevStrict.Yii2.DisallowResponseFormatAssignment` - Use controller methods like `asJson()` instead of direct assignment
+- `DevStrict.Yii2.PreferActiveRecordShortcuts` - Suggest `findOne()`/`findAll()` over `find()->where()->one()/all()`
+
+## Development
 
 ### Guidelines
 
