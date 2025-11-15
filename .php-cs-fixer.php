@@ -137,7 +137,6 @@ return (new Config())
         // Namespace notation
         'blank_line_after_namespace' => true,
         'no_leading_namespace_whitespace' => true,
-        'single_blank_line_before_namespace' => true,
 
         // Operator
         'binary_operator_spaces' => ['default' => 'single_space'],
