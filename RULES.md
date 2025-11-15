@@ -12,6 +12,8 @@ This document describes the custom coding standard rules implemented in the DevS
   - [Control Structures](#control-structures)
     - [DevStrict.ControlStructures.DisallowThrowInTernary](#devstrictcontrolstructuresdisallowthrowinternary)
     - [DevStrict.ControlStructures.UseInArray](#devstrictcontrolstructuresuseinarray)
+  - [Yii2](#yii2)
+    - [DevStrict.Yii2.DisallowResponseFormatAssignment](#devstrictyii2disallowresponseformatassignment)
 
 ---
 
@@ -152,5 +154,63 @@ if (in_array($site_id, [1, 2, 3], true)) {
 
 if (!in_array($status, ['pending', 'processing', 'cancelled'], true)) {
     // do something
+}
+```
+
+---
+
+## Yii2
+
+### DevStrict.Yii2.DisallowResponseFormatAssignment
+
+**Type:** Warning
+
+**Description:** Disallows direct assignment to `Yii::$app->response->format`. In Yii2 controllers, it's better to use
+controller methods like `$this->asJson()`, `$this->asXml()`, etc., which automatically set the response format. This
+approach is more explicit, controller-centric, and follows Yii2 best practices.
+
+**Bad:**
+
+```php
+use yii\web\Response;
+
+class SiteController extends Controller
+{
+    public function actionIndex()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return ['status' => 'ok', 'data' => $data];
+    }
+
+    public function actionApi()
+    {
+        Yii::$app->response->format = 'json';
+        return ['result' => $result];
+    }
+}
+```
+
+**Good:**
+
+```php
+class SiteController extends Controller
+{
+    public function actionIndex()
+    {
+        return $this->asJson(['status' => 'ok', 'data' => $data]);
+    }
+
+    public function actionApi()
+    {
+        return $this->asJson(['result' => $result]);
+    }
+
+    // Or if you need more control:
+    public function actionCustom()
+    {
+        $response = $this->asJson(['data' => $data]);
+        $response->headers->set('X-Custom-Header', 'value');
+        return $response;
+    }
 }
 ```

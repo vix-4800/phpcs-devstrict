@@ -18,4 +18,8 @@
     <rule ref="DevStrict.ControlStructures.UseInArray">
         <type>warning</type>
     </rule>
+
+    <rule ref="DevStrict.Yii2.DisallowResponseFormatAssignment">
+        <type>warning</type>
+    </rule>
 </ruleset>
