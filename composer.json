@@ -12,7 +12,6 @@
     ],
     "prefer-stable": true,
     "config": {
-        "bin-dir": "bin",
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "phpstan/extension-installer": true
@@ -42,7 +41,7 @@
         }
     },
     "scripts": {
-        "post-autoload-dump": "bin/captainhook install --only-enabled -f -s",
+        "post-autoload-dump": "vendor/bin/captainhook install --only-enabled -f -s",
         "test": "phpunit",
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",
