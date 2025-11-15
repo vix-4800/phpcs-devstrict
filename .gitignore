@@ -1,6 +1,38 @@
+# Composer
 composer.phar
 /vendor/
-/bin
-/composer.lock
+/bin/
+composer.lock
+
+# PHPUnit
 /.phpunit.result.cache
-/.rector-tmp
+/coverage/
+/coverage.xml
+/phpunit.xml
+
+# PHPStan
+/phpstan.neon.dist
+/.phpstan/
+
+# PHP-CS-Fixer
+/.php-cs-fixer.cache
+/.php_cs.cache
+
+# Rector
+/.rector-tmp/
+
+# IDE
+/.idea/
+/.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.log
