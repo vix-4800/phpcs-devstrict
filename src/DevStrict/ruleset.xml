@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    name="DevStrict">
+    <description>DevStrict Coding Standard - Main ruleset</description>
+
+    <!-- Include Common sniffs -->
+    <rule ref="DevStrict.Functions.DisallowIsNull">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="DevStrict.ControlStructures.DisallowThrowInTernary">
+        <type>error</type>
+    </rule>
+</ruleset>
