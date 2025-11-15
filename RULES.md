@@ -14,6 +14,7 @@ This document describes the custom coding standard rules implemented in the DevS
     - [DevStrict.ControlStructures.UseInArray](#devstrictcontrolstructuresuseinarray)
   - [Yii2](#yii2)
     - [DevStrict.Yii2.DisallowResponseFormatAssignment](#devstrictyii2disallowresponseformatassignment)
+    - [DevStrict.Yii2.PreferActiveRecordShortcuts](#devstrictyii2preferactiverecordshortcuts)
 
 ---
 
@@ -214,3 +215,67 @@ class SiteController extends Controller
     }
 }
 ```
+
+---
+
+### DevStrict.Yii2.PreferActiveRecordShortcuts
+
+**Type:** Warning
+
+**Description:** Suggests using ActiveRecord shortcuts like `findOne()` and `findAll()` instead of
+`find()->where()->one()/all()`. Yii2 provides convenient shortcut methods that are more concise and readable for simple
+queries.
+
+**Bad:**
+
+```php
+class UserController extends Controller
+{
+    public function actionView($id)
+    {
+        $user = User::find()->where(['id' => $id])->one();
+        return $this->render('view', ['user' => $user]);
+    }
+
+    public function actionList()
+    {
+        $users = User::find()->where(['status' => 1])->all();
+        return $this->render('list', ['users' => $users]);
+    }
+}
+```
+
+**Good:**
+
+```php
+class UserController extends Controller
+{
+    public function actionView($id)
+    {
+        $user = User::findOne($id);
+        // or for multiple conditions:
+        $user = User::findOne(['id' => $id, 'status' => 1]);
+        return $this->render('view', ['user' => $user]);
+    }
+
+    public function actionList()
+    {
+        $users = User::findAll(['status' => 1]);
+        return $this->render('list', ['users' => $users]);
+    }
+
+    // Complex queries are OK - no warning triggered:
+    public function actionActive()
+    {
+        $activeUsers = User::find()
+            ->where(['status' => 'active'])
+            ->orderBy('created_at DESC')
+            ->all();
+        return $this->asJson($activeUsers);
+    }
+}
+```
+
+**Note:** This rule **only** triggers for the exact pattern `find()->where()->one()` or `find()->where()->all()` with
+nothing in between. If you have additional method calls like `andWhere()`, `orWhere()`, `orderBy()`, `limit()`, etc.,
+the warning will not be triggered because these complex queries cannot be simplified to `findOne()`/`findAll()`.
