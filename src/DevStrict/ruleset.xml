@@ -27,10 +27,6 @@
         <type>warning</type>
     </rule>
 
-    <rule ref="DevStrict.Yii2.PreferMagicProperties">
-        <type>warning</type>
-    </rule>
-
     <rule ref="DevStrict.Yii2.PreferExistsOverCount">
         <type>warning</type>
     </rule>
