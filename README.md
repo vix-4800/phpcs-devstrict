@@ -57,6 +57,7 @@ Core rules applicable to all PHP projects. See [RULES.md](RULES.md) for detailed
 
 **Includes:**
 
+- `DevStrict.Functions.DisallowCastFunctions` - Use type casts instead of `strval()`, `intval()`, `floatval()`, `boolval()`
 - `DevStrict.Functions.DisallowIsNull` - Prefer `=== null` over `is_null()`
 - `DevStrict.Functions.DisallowCompact` - Disallow `compact()` function usage
 - `DevStrict.ControlStructures.DisallowCountInLoop` - Prevent `count()` in loop conditions for performance

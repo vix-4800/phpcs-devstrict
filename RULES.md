@@ -7,6 +7,7 @@ This document describes the custom coding standard rules implemented in the DevS
 - [DevStrict Coding Standard Rules](#devstrict-coding-standard-rules)
   - [Table of Contents](#table-of-contents)
   - [Functions](#functions)
+    - [DevStrict.Functions.DisallowCastFunctions](#devstrictfunctionsdisallowcastfunctions)
     - [DevStrict.Functions.DisallowIsNull](#devstrictfunctionsdisallowisnull)
     - [DevStrict.Functions.DisallowCompact](#devstrictfunctionsdisallowcompact)
   - [Control Structures](#control-structures)
@@ -21,6 +22,35 @@ This document describes the custom coding standard rules implemented in the DevS
 ---
 
 ## Functions
+
+### DevStrict.Functions.DisallowCastFunctions
+
+**Type:** Warning
+
+**Description:** Disallows the use of `strval()`, `intval()`, `floatval()`, and `boolval()` functions in favor of type
+casts. Type casts are shorter, more consistent with strict typing style, and clearer in intent.
+
+**Bad:**
+
+```php
+$string = strval($var);
+$integer = intval($var);
+$float = floatval($var);
+$boolean = boolval($var);
+$hex = intval($value, 16);
+```
+
+**Good:**
+
+```php
+$string = (string) $var;
+$integer = (int) $var;
+$float = (float) $var;
+$boolean = (bool) $var;
+$hex = (int) hexdec($value);
+```
+
+---
 
 ### DevStrict.Functions.DisallowIsNull
 
