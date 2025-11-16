@@ -59,6 +59,7 @@ Core rules applicable to all PHP projects. See [RULES.md](RULES.md) for detailed
 
 - `DevStrict.Functions.DisallowIsNull` - Prefer `=== null` over `is_null()`
 - `DevStrict.Functions.DisallowCompact` - Disallow `compact()` function usage
+- `DevStrict.ControlStructures.DisallowCountInLoop` - Prevent `count()` in loop conditions for performance
 - `DevStrict.ControlStructures.DisallowThrowInTernary` - No exceptions in ternary operators
 - `DevStrict.ControlStructures.UseInArray` - Suggest `in_array()` for multiple OR comparisons
 

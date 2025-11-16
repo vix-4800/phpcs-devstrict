@@ -10,6 +10,7 @@ This document describes the custom coding standard rules implemented in the DevS
     - [DevStrict.Functions.DisallowIsNull](#devstrictfunctionsdisallowisnull)
     - [DevStrict.Functions.DisallowCompact](#devstrictfunctionsdisallowcompact)
   - [Control Structures](#control-structures)
+    - [DevStrict.ControlStructures.DisallowCountInLoop](#devstrictcontrolstructuresdisallowcountinloop)
     - [DevStrict.ControlStructures.DisallowThrowInTernary](#devstrictcontrolstructuresdisallowthrowinternary)
     - [DevStrict.ControlStructures.UseInArray](#devstrictcontrolstructuresuseinarray)
   - [Yii2](#yii2)
@@ -93,6 +94,42 @@ return [
 ---
 
 ## Control Structures
+
+### DevStrict.ControlStructures.DisallowCountInLoop
+
+**Type:** Warning
+
+**Description:** Disallows the use of `count()` function in `for` loop conditions. Calling `count()` in the loop
+condition causes it to be executed on every iteration, which is inefficient. Store the count in a variable before the
+loop or use `foreach` instead.
+
+**Bad:**
+
+```php
+for ($i = 0; $i < count($array); $i++) {
+    echo $array[$i];
+}
+
+for ($i = 0; $i < count($this->items); $i++) {
+    // do something
+}
+```
+
+**Good:**
+
+```php
+$count = count($array);
+for ($i = 0; $i < $count; $i++) {
+    echo $array[$i];
+}
+
+// Or better - use foreach:
+foreach ($array as $item) {
+    echo $item;
+}
+```
+
+---
 
 ### DevStrict.ControlStructures.DisallowThrowInTernary
 
