@@ -12,6 +12,7 @@ This document describes the custom coding standard rules implemented in the DevS
     - [DevStrict.Functions.DisallowCompact](#devstrictfunctionsdisallowcompact)
   - [Control Structures](#control-structures)
     - [DevStrict.ControlStructures.DisallowCountInLoop](#devstrictcontrolstructuresdisallowcountinloop)
+    - [DevStrict.ControlStructures.DisallowGotoStatement](#devstrictcontrolstructuresdisallowgotostatement)
     - [DevStrict.ControlStructures.DisallowThrowInTernary](#devstrictcontrolstructuresdisallowthrowinternary)
     - [DevStrict.ControlStructures.UseInArray](#devstrictcontrolstructuresuseinarray)
   - [Yii2](#yii2)
@@ -156,6 +157,57 @@ for ($i = 0; $i < $count; $i++) {
 // Or better - use foreach:
 foreach ($array as $item) {
     echo $item;
+}
+```
+
+---
+
+### DevStrict.ControlStructures.DisallowGotoStatement
+
+**Type:** Error
+
+**Description:** Disallows the use of `goto` statements. The `goto` statement is considered an anti-pattern in modern
+PHP as it makes code harder to read, understand, and maintain. Use proper control structures instead.
+
+**Bad:**
+
+```php
+if ($error) {
+    goto cleanup;
+}
+echo "Processing...";
+cleanup:
+echo "Cleanup";
+
+// Backward jump
+$counter = 0;
+start:
+$counter++;
+if ($counter < 5) {
+    goto start;
+}
+```
+
+**Good:**
+
+```php
+// Use early returns
+if ($error) {
+    echo "Cleanup";
+    return;
+}
+echo "Processing...";
+
+// Use proper loops
+for ($counter = 0; $counter < 5; $counter++) {
+    // do something
+}
+
+// Use structured error handling
+try {
+    echo "Processing...";
+} finally {
+    echo "Cleanup";
 }
 ```
 
