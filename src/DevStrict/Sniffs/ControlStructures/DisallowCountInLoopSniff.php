@@ -95,8 +95,7 @@ class DisallowCountInLoopSniff implements Sniff
                 continue;
             }
 
-            $error = 'Using count() in loop condition causes performance issues as it is called on every iteration.
-                Store count in a variable before the loop or use foreach instead';
+            $error = 'Using count() in loop condition causes performance issues as it is called on every iteration. Store count in a variable before the loop or use foreach instead';
             $phpcsFile->addWarning($error, $i, 'Found');
         }
     }
