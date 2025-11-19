@@ -3,15 +3,7 @@
     name="DevStrict">
     <description>DevStrict Coding Standard - Main ruleset</description>
 
-    <rule ref="DevStrict.Functions.DisallowIsNull">
-        <type>warning</type>
-    </rule>
-
     <rule ref="DevStrict.ControlStructures.DisallowThrowInTernary">
-        <type>error</type>
-    </rule>
-
-    <rule ref="DevStrict.Functions.DisallowCompact">
         <type>error</type>
     </rule>
 
