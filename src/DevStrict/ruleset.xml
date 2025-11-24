@@ -26,4 +26,18 @@
     <rule ref="DevStrict.Yii2.PreferIsGuestOverUserIdCheck">
         <type>warning</type>
     </rule>
+
+    <rule ref="DevStrict.Attributes.ForbiddenAttributes">
+        <type>warning</type>
+        <properties>
+            <property name="forbiddenAttributes" type="array">
+                <element value="ArrayShape" />
+                <element value="JetBrains\PhpStorm\ArrayShape" />
+                <element value="Pure" />
+                <element value="JetBrains\PhpStorm\Pure" />
+                <element value="Deprecated" />
+                <element value="JetBrains\PhpStorm\Deprecated" />
+            </property>
+        </properties>
+    </rule>
 </ruleset>

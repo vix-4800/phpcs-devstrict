@@ -19,6 +19,8 @@ This document describes the custom coding standard rules implemented in the DevS
     - [DevStrict.Yii2.DisallowResponseFormatAssignment](#devstrictyii2disallowresponseformatassignment)
     - [DevStrict.Yii2.PreferActiveRecordShortcuts](#devstrictyii2preferactiverecordshortcuts)
     - [DevStrict.Yii2.PreferExistsOverCount](#devstrictyii2preferexistsovercount)
+  - [Attributes](#attributes)
+    - [DevStrict.Attributes.ForbiddenAttributes](#devstrictattributesforbiddenattributes)
 
 ---
 

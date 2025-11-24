@@ -62,6 +62,7 @@ Core rules applicable to all PHP projects. See [RULES.md](RULES.md) for detailed
 - `DevStrict.ControlStructures.DisallowGotoStatement` - Disallow `goto` statements as anti-pattern
 - `DevStrict.ControlStructures.DisallowThrowInTernary` - No exceptions in ternary operators
 - `DevStrict.ControlStructures.UseInArray` - Suggest `in_array()` for multiple OR comparisons
+- `DevStrict.Attributes.ForbiddenAttributes` - Disallow specific attributes (e.g. `#[ArrayShape]`)
 
 ### DevStrict/Laravel
 
