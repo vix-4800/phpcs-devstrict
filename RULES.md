@@ -8,8 +8,6 @@ This document describes the custom coding standard rules implemented in the DevS
   - [Table of Contents](#table-of-contents)
   - [Functions](#functions)
     - [DevStrict.Functions.DisallowCastFunctions](#devstrictfunctionsdisallowcastfunctions)
-    - [DevStrict.Functions.DisallowIsNull](#devstrictfunctionsdisallowisnull)
-    - [DevStrict.Functions.DisallowCompact](#devstrictfunctionsdisallowcompact)
   - [Control Structures](#control-structures)
     - [DevStrict.ControlStructures.DisallowCountInLoop](#devstrictcontrolstructuresdisallowcountinloop)
     - [DevStrict.ControlStructures.DisallowGotoStatement](#devstrictcontrolstructuresdisallowgotostatement)
@@ -51,77 +49,6 @@ $integer = (int) $var;
 $float = (float) $var;
 $boolean = (bool) $var;
 $hex = (int) hexdec($value);
-```
-
----
-
-### DevStrict.Functions.DisallowIsNull
-
-**Type:** Warning
-
-**Description:** Disallows the use of `is_null()` function. Use strict comparison with `=== null` instead for better
-readability and consistency.
-
-**Bad:**
-
-```php
-if (is_null($variable)) {
-    // do something
-}
-
-$result = is_null($data) ? 'empty' : 'filled';
-```
-
-**Good:**
-
-```php
-if ($variable === null) {
-    // do something
-}
-
-$result = $data === null ? 'empty' : 'filled';
-```
-
----
-
-### DevStrict.Functions.DisallowCompact
-
-**Type:** Error
-
-**Description:** Disallows the use of `compact()` function. The `compact()` function creates an array from variables and
-their values, but it makes code less explicit and harder to track variable usage. Use explicit array syntax instead for
-better readability and maintainability.
-
-**Bad:**
-
-```php
-$name = 'John';
-$age = 30;
-$email = 'john@example.com';
-
-$data = compact('name', 'age', 'email');
-
-return compact('user', 'posts', 'comments');
-```
-
-**Good:**
-
-```php
-$name = 'John';
-$age = 30;
-$email = 'john@example.com';
-
-$data = [
-    'name' => $name,
-    'age' => $age,
-    'email' => $email,
-];
-
-return [
-    'user' => $user,
-    'posts' => $posts,
-    'comments' => $comments,
-];
 ```
 
 ---
@@ -253,8 +180,8 @@ $data = getData();
 **Type:** Warning
 
 **Description:** Detects multiple OR/AND comparisons of the same variable and suggests using `in_array()` or
-`!in_array()` instead. This makes the code more concise, readable, and easier to maintain. The sniff triggers when
-there are 3 or more comparisons of the same variable.
+`!in_array()` instead. This makes the code more concise, readable, and easier to maintain. The sniff triggers when there
+are 3 or more comparisons of the same variable.
 
 **Bad:**
 
@@ -398,10 +325,9 @@ class UserController extends Controller
 }
 ```
 
-> [!NOTE]
-> This rule **only** triggers for the exact pattern `find()->where()->one()` or `find()->where()->all()` with
-nothing in between. If you have additional method calls like `andWhere()`, `orWhere()`, `orderBy()`, `limit()`, etc.,
-the warning will not be triggered because these complex queries cannot be simplified to `findOne()`/`findAll()`.
+> [!NOTE] This rule **only** triggers for the exact pattern `find()->where()->one()` or `find()->where()->all()` with
+> nothing in between. If you have additional method calls like `andWhere()`, `orWhere()`, `orderBy()`, `limit()`, etc.,
+> the warning will not be triggered because these complex queries cannot be simplified to `findOne()`/`findAll()`.
 
 ---
 
@@ -410,8 +336,8 @@ the warning will not be triggered because these complex queries cannot be simpli
 **Type:** Warning
 
 **Description:** Suggests using `exists()` instead of `count() > 0` and similar patterns for ActiveQuery existence
-checks. The `exists()` method is more efficient than `count()` when you only need to check if any records exist,
-as it stops after finding the first match instead of counting all records.
+checks. The `exists()` method is more efficient than `count()` when you only need to check if any records exist, as it
+stops after finding the first match instead of counting all records.
 
 **Bad:**
 
@@ -458,5 +384,45 @@ class UserController extends Controller
 
         $hasRecords = Post::find()->where(['published' => true])->exists();
     }
+}
+```
+
+---
+
+## Attributes
+
+### DevStrict.Attributes.ForbiddenAttributes
+
+**Type:** Warning
+
+**Description:** Suggests avoiding the use of certain attributes that are considered harmful or unnecessary. This
+includes attributes that can lead to confusion, reduce code clarity, or introduce potential bugs.
+
+**Bad:**
+
+```php
+class User
+{
+    #[Deprecated]
+    public $name;
+
+    #[Sensitive]
+    public $email;
+
+    #[Obsolete]
+    public $age;
+}
+```
+
+**Good:**
+
+```php
+class User
+{
+    public $name;
+
+    public $email;
+
+    public $age;
 }
 ```
