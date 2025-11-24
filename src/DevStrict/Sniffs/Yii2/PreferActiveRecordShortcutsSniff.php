@@ -126,7 +126,7 @@ class PreferActiveRecordShortcutsSniff implements Sniff
         $message = sprintf(
             'Use %s shortcut method instead of find()->where()->%s() for better readability',
             $shortcut,
-            $endMethod
+            $endMethod,
         );
 
         $phpcsFile->addWarning($message, $stackPtr, 'UseShortcut');

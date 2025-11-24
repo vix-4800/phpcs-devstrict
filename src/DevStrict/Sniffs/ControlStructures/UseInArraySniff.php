@@ -89,7 +89,7 @@ class UseInArraySniff implements Sniff
                 'Multiple %s comparisons detected (%d comparisons). Consider using %s instead',
                 $operator,
                 count($comparisons),
-                $function
+                $function,
             );
 
             $phpcsFile->addWarning($warning, $stackPtr, 'Found');
@@ -201,15 +201,15 @@ class UseInArraySniff implements Sniff
             [T_BOOLEAN_OR, T_BOOLEAN_AND],
             $stackPtr + 1,
             $endPtr,
-            false
+            false,
         );
     }
 
     /**
      * Finds the next comparison of the specified type after the current position.
      *
-     * @param int $comparisonType The comparison type to look for (T_IS_IDENTICAL or T_IS_NOT_IDENTICAL)
-     * @param int|null $endPtr Maximum position to search until
+     * @param int      $comparisonType The comparison type to look for (T_IS_IDENTICAL or T_IS_NOT_IDENTICAL)
+     * @param int|null $endPtr         Maximum position to search until
      *
      * @return false|int Position of the comparison or false if not found
      */
@@ -219,7 +219,7 @@ class UseInArraySniff implements Sniff
             $comparisonType,
             $stackPtr + 1,
             $endPtr,
-            false
+            false,
         );
     }
 }

@@ -182,7 +182,7 @@ class PreferExistsOverCountSniff implements Sniff
         $message = sprintf(
             'Use %s instead of %s for better performance when checking record existence',
             $suggestion,
-            $pattern
+            $pattern,
         );
 
         $phpcsFile->addWarning($message, $stackPtr, 'Found');

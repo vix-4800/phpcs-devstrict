@@ -89,7 +89,7 @@ class DisallowCastFunctionsSniff implements Sniff
         $warning = sprintf(
             'Use of %s() is discouraged; use type cast %s instead for consistency and brevity',
             $functionName,
-            $castEquivalent
+            $castEquivalent,
         );
 
         $phpcsFile->addWarning($warning, $stackPtr, 'Found');
