@@ -24,7 +24,7 @@
         }
     },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.3",
         "dealerdirect/phpcodesniffer-composer-installer": "^1.2.0",
         "squizlabs/php_codesniffer": "^4.0.0"
     },
