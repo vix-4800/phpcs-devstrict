@@ -21,7 +21,7 @@
     <exclude-pattern>*/tests/*</exclude-pattern>
 
     <!-- Set PHP version -->
-    <config name="php_version" value="70400" />
+    <config name="php_version" value="80300" />
 
     <!-- PSR-12 as base -->
     <rule ref="PSR12" />
