@@ -28,14 +28,14 @@ abstract class BaseTest extends TestCase
 
         if ($sniff !== null) {
             $command = sprintf(
-                '%s --standard=DevStrict --sniffs=%s %s 2>&1',
+                '%s --standard=DevStrict --report-width=1000 --sniffs=%s %s 2>&1',
                 escapeshellarg($phpcsPath),
                 escapeshellarg($sniff),
                 escapeshellarg($tempFile)
             );
         } else {
             $command = sprintf(
-                '%s --standard=DevStrict %s 2>&1',
+                '%s --standard=DevStrict --report-width=1000 %s 2>&1',
                 escapeshellarg($phpcsPath),
                 escapeshellarg($tempFile)
             );
