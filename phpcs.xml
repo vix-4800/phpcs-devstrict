@@ -13,7 +13,6 @@
 
     <!-- Check these paths -->
     <file>src</file>
-    <file>tests</file>
 
     <!-- Exclude vendor and other directories -->
     <exclude-pattern>*/vendor/*</exclude-pattern>
