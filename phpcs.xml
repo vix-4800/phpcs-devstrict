@@ -51,7 +51,7 @@
     <rule ref="Squiz.Scope.StaticThisUsage" />
     <rule ref="Squiz.WhiteSpace.CastSpacing" />
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing" />
-    <rule ref="Squiz.WhiteSpace.OperatorSpacing" />
+    <!-- <rule ref="Squiz.WhiteSpace.OperatorSpacing" /> -->
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing" />
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace" />
 </ruleset>

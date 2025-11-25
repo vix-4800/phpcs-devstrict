@@ -41,7 +41,8 @@ class DisallowThrowInTernarySniff implements Sniff
         $tokenCode = $tokens[$ternaryToken]['code'];
 
         if (in_array($tokenCode, [T_INLINE_THEN, T_INLINE_ELSE], true)) {
-            $error = 'Throwing exceptions inside ternary operators is not allowed. Use if-else statement or extract to a separate expression for better readability.';
+            $error = 'Throwing exceptions inside ternary operators is not allowed.
+                Use if-else statement or extract to a separate expression for better readability.';
 
             $phpcsFile->addError($error, $stackPtr, 'Found');
         }

@@ -72,7 +72,11 @@ class PreferActiveRecordShortcutsSniff implements Sniff
         $current = $next + 1;
         $methodToken = $phpcsFile->findNext(T_WHITESPACE, $current, null, true);
 
-        if ($methodToken === false || $tokens[$methodToken]['code'] !== T_STRING || $tokens[$methodToken]['content'] !== 'where') {
+        if (
+            $methodToken === false
+            || $tokens[$methodToken]['code'] !== T_STRING
+            || $tokens[$methodToken]['content'] !== 'where'
+        ) {
             return;
         }
 

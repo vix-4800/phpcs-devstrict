@@ -213,8 +213,12 @@ class UseInArraySniff implements Sniff
      *
      * @return false|int Position of the comparison or false if not found
      */
-    private function findNextComparison(File $phpcsFile, int $stackPtr, int $comparisonType, ?int $endPtr = null): false|int
-    {
+    private function findNextComparison(
+        File $phpcsFile,
+        int $stackPtr,
+        int $comparisonType,
+        ?int $endPtr = null
+    ): false|int {
         return $phpcsFile->findNext(
             $comparisonType,
             $stackPtr + 1,

@@ -103,7 +103,8 @@ class DisallowResponseFormatAssignmentSniff implements Sniff
             return;
         }
 
-        $error = 'Direct assignment to Yii::$app->response->format is discouraged; use controller methods like $this->asJson() instead';
+        $error = 'Direct assignment to Yii::$app->response->format is discouraged;
+            use controller methods like $this->asJson() instead';
         $phpcsFile->addWarning($error, $stackPtr, 'Found');
     }
 }

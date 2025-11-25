@@ -38,7 +38,8 @@ class DisallowGotoStatementSniff implements Sniff
      */
     public function process(File $phpcsFile, int $stackPtr): void
     {
-        $error = 'The goto statement is an anti-pattern in modern PHP and should be avoided. Use proper control structures (if/else, loops, early returns) instead';
+        $error = 'The goto statement is an anti-pattern in modern PHP and should be avoided.
+            Use proper control structures (if/else, loops, early returns) instead';
         $phpcsFile->addError($error, $stackPtr, 'Found');
     }
 }
