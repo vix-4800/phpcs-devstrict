@@ -49,7 +49,7 @@ class DisallowCountInLoopSniff implements Sniff
         $closeParenthesis = $tokens[$stackPtr]['parenthesis_closer'];
 
         $semicolons = [];
-        for ($i = $openParenthesis + 1; $i < $closeParenthesis; $i++) {
+        for ($i = $openParenthesis + 1; $i < $closeParenthesis; ++$i) {
             if ($tokens[$i]['code'] === T_SEMICOLON) {
                 $semicolons[] = $i;
             }
@@ -62,7 +62,7 @@ class DisallowCountInLoopSniff implements Sniff
         $conditionStart = $semicolons[0] + 1;
         $conditionEnd = $semicolons[1] - 1;
 
-        for ($i = $conditionStart; $i <= $conditionEnd; $i++) {
+        for ($i = $conditionStart; $i <= $conditionEnd; ++$i) {
             if ($tokens[$i]['code'] !== T_STRING) {
                 continue;
             }

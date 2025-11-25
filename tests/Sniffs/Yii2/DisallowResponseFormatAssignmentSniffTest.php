@@ -8,6 +8,10 @@ use DevStrict\Tests\BaseTest;
 
 /**
  * Tests for DisallowResponseFormatAssignmentSniff.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class DisallowResponseFormatAssignmentSniffTest extends BaseTest
 {

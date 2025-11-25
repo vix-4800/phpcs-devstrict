@@ -101,7 +101,7 @@ class UseInArraySniff implements Sniff
      *
      * @param bool $left True to get left side, false to get right side
      *
-     * @return string|null The variable name or null if not found
+     * @return null|string The variable name or null if not found
      */
     private function getComparisonVariable(File $phpcsFile, int $comparisonPtr, bool $left): ?string
     {
@@ -191,11 +191,11 @@ class UseInArraySniff implements Sniff
     /**
      * Finds the next logical operator (|| or &&) after the current position.
      *
-     * @param int|null $endPtr Maximum position to search until
+     * @param null|int $endPtr Maximum position to search until
      *
      * @return false|int Position of the logical operator or false if not found
      */
-    private function findNextLogicalOperator(File $phpcsFile, int $stackPtr, ?int $endPtr = null): int|false
+    private function findNextLogicalOperator(File $phpcsFile, int $stackPtr, ?int $endPtr = null): false|int
     {
         return $phpcsFile->findNext(
             [T_BOOLEAN_OR, T_BOOLEAN_AND],
@@ -208,12 +208,12 @@ class UseInArraySniff implements Sniff
     /**
      * Finds the next comparison of the specified type after the current position.
      *
-     * @param int      $comparisonType The comparison type to look for (T_IS_IDENTICAL or T_IS_NOT_IDENTICAL)
-     * @param int|null $endPtr         Maximum position to search until
+     * @param int $comparisonType The comparison type to look for (T_IS_IDENTICAL or T_IS_NOT_IDENTICAL)
+     * @param null|int $endPtr Maximum position to search until
      *
      * @return false|int Position of the comparison or false if not found
      */
-    private function findNextComparison(File $phpcsFile, int $stackPtr, int $comparisonType, ?int $endPtr = null): int|false
+    private function findNextComparison(File $phpcsFile, int $stackPtr, int $comparisonType, ?int $endPtr = null): false|int
     {
         return $phpcsFile->findNext(
             $comparisonType,

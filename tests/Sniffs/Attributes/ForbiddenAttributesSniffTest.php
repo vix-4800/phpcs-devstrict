@@ -6,24 +6,29 @@ namespace DevStrict\Tests\Sniffs\Attributes;
 
 use DevStrict\Tests\BaseTest;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class ForbiddenAttributesSniffTest extends BaseTest
 {
     public function testForbiddenAttributeTriggersWarning(): void
     {
         $code = <<<'PHP'
-<?php
+            <?php
 
-use JetBrains\PhpStorm\ArrayShape;
+            use JetBrains\PhpStorm\ArrayShape;
 
-class Test
-{
-    #[ArrayShape(['id' => 'int'])]
-    public function toArray(): array
-    {
-        return ['id' => 1];
-    }
-}
-PHP;
+            class Test
+            {
+                #[ArrayShape(['id' => 'int'])]
+                public function toArray(): array
+                {
+                    return ['id' => 1];
+                }
+            }
+            PHP;
 
         $result = $this->runPhpcs($code, 'DevStrict.Attributes.ForbiddenAttributes');
         $this->assertContainsWarning($result, 'Usage of attribute "ArrayShape" is forbidden.');
@@ -32,17 +37,17 @@ PHP;
     public function testFullyQualifiedForbiddenAttributeTriggersWarning(): void
     {
         $code = <<<'PHP'
-<?php
+            <?php
 
-class Test
-{
-    #[\JetBrains\PhpStorm\ArrayShape(['id' => 'int'])]
-    public function toArray(): array
-    {
-        return ['id' => 1];
-    }
-}
-PHP;
+            class Test
+            {
+                #[\JetBrains\PhpStorm\ArrayShape(['id' => 'int'])]
+                public function toArray(): array
+                {
+                    return ['id' => 1];
+                }
+            }
+            PHP;
 
         $result = $this->runPhpcs($code, 'DevStrict.Attributes.ForbiddenAttributes');
         $this->assertContainsWarning($result, 'Usage of attribute "\JetBrains\PhpStorm\ArrayShape" is forbidden.');
@@ -51,17 +56,17 @@ PHP;
     public function testAllowedAttributeDoesNotTriggerWarning(): void
     {
         $code = <<<'PHP'
-<?php
+            <?php
 
-class Test
-{
-    #[ReturnTypeWillChange]
-    public function jsonSerialize()
-    {
-        return [];
-    }
-}
-PHP;
+            class Test
+            {
+                #[ReturnTypeWillChange]
+                public function jsonSerialize()
+                {
+                    return [];
+                }
+            }
+            PHP;
 
         $result = $this->runPhpcs($code, 'DevStrict.Attributes.ForbiddenAttributes');
         $this->assertNoViolations($result);
@@ -71,17 +76,17 @@ PHP;
     {
         $sniffPath = __DIR__ . '/../../../src/DevStrict/Sniffs/Attributes/ForbiddenAttributesSniff.php';
         $ruleset = <<<XML
-<?xml version="1.0"?>
-<ruleset name="Test">
-    <rule ref="$sniffPath">
-        <properties>
-            <property name="forbiddenAttributes" type="array">
-                <element value="My\Custom\Attribute"/>
-            </property>
-        </properties>
-    </rule>
-</ruleset>
-XML;
+            <?xml version="1.0"?>
+            <ruleset name="Test">
+                <rule ref="{$sniffPath}">
+                    <properties>
+                        <property name="forbiddenAttributes" type="array">
+                            <element value="My\\Custom\\Attribute"/>
+                        </property>
+                    </properties>
+                </rule>
+            </ruleset>
+            XML;
 
         $rulesetFile = tempnam(sys_get_temp_dir(), 'phpcs_ruleset_');
         $rulesetPath = $rulesetFile . '.xml';
@@ -89,11 +94,11 @@ XML;
         file_put_contents($rulesetPath, $ruleset);
 
         $code = <<<'PHP'
-<?php
+            <?php
 
-#[My\Custom\Attribute]
-class Test {}
-PHP;
+            #[My\Custom\Attribute]
+            class Test {}
+            PHP;
 
         $tempFile = tempnam(sys_get_temp_dir(), 'phpcs_test_');
         file_put_contents($tempFile, $code);

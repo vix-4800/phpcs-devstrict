@@ -8,6 +8,10 @@ use DevStrict\Tests\BaseTest;
 
 /**
  * Tests for PreferExistsOverCountSniff.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class PreferExistsOverCountSniffTest extends BaseTest
 {

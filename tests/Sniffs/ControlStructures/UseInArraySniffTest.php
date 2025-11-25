@@ -8,6 +8,10 @@ use DevStrict\Tests\BaseTest;
 
 /**
  * Tests for UseInArraySniff.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class UseInArraySniffTest extends BaseTest
 {

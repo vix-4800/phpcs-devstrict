@@ -8,6 +8,10 @@ use DevStrict\Tests\BaseTest;
 
 /**
  * Tests for DisallowThrowInTernarySniff.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class DisallowThrowInTernarySniffTest extends BaseTest
 {
@@ -81,4 +85,3 @@ $result = $cond1 ? ($cond2 ? throw new Exception() : "b") : "c";', 'DevStrict.Co
         $this->assertContainsError($result, 'ternary');
     }
 }
-

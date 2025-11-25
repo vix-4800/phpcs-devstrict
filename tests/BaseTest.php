@@ -15,8 +15,9 @@ abstract class BaseTest extends TestCase
      * Run PHPCS on given content with specified sniff.
      *
      * @param string $content PHP code to check
-     * @param string|null $sniff Specific sniff to run (e.g., 'DevStrict.Functions.DisallowIsNull')
+     * @param null|string $sniff Specific sniff to run (e.g., 'DevStrict.Functions.DisallowIsNull')
      *                           If null, all DevStrict sniffs will be run
+     *
      * @return string PHPCS output
      */
     protected function runPhpcs(string $content, ?string $sniff = null): string
@@ -51,7 +52,7 @@ abstract class BaseTest extends TestCase
      * Assert that PHPCS output contains a warning.
      *
      * @param string $output PHPCS output
-     * @param string|null $message Optional message fragment to check for
+     * @param null|string $message Optional message fragment to check for
      */
     protected function assertContainsWarning(string $output, ?string $message = null): void
     {
@@ -66,7 +67,7 @@ abstract class BaseTest extends TestCase
      * Assert that PHPCS output contains an error.
      *
      * @param string $output PHPCS output
-     * @param string|null $message Optional message fragment to check for
+     * @param null|string $message Optional message fragment to check for
      */
     protected function assertContainsError(string $output, ?string $message = null): void
     {

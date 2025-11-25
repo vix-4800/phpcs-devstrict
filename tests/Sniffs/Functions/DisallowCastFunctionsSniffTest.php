@@ -8,6 +8,10 @@ use DevStrict\Tests\BaseTest;
 
 /**
  * Tests for DisallowCastFunctionsSniff.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class DisallowCastFunctionsSniffTest extends BaseTest
 {

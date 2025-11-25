@@ -8,6 +8,10 @@ use DevStrict\Tests\BaseTest;
 
 /**
  * Tests for PreferIsGuestOverUserIdCheckSniff.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class PreferIsGuestOverUserIdCheckSniffTest extends BaseTest
 {

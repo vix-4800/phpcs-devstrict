@@ -8,6 +8,10 @@ use DevStrict\Tests\BaseTest;
 
 /**
  * Tests for DisallowCountInLoopSniff.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class DisallowCountInLoopSniffTest extends BaseTest
 {

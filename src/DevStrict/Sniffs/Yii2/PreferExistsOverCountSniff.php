@@ -90,7 +90,7 @@ class PreferExistsOverCountSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        for ($i = $openParen + 1; $i < $closeParen; $i++) {
+        for ($i = $openParen + 1; $i < $closeParen; ++$i) {
             if (in_array($tokens[$i]['code'], [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)) {
                 continue;
             }
@@ -104,7 +104,7 @@ class PreferExistsOverCountSniff implements Sniff
     /**
      * Get the comparison type if it's a count existence check.
      *
-     * @return array{operator: string, value: string, shouldNegate: bool}|null
+     * @return null|array{operator: string, value: string, shouldNegate: bool}
      */
     private function getComparison(File $phpcsFile, int $startPtr): ?array
     {
@@ -146,17 +146,17 @@ class PreferExistsOverCountSniff implements Sniff
         $shouldNegate = false;
 
         if (
-            ($operator === '>' && $value === '0') ||
-            ($operator === '>=' && $value === '1') ||
-            ($operator === '!=' && $value === '0') ||
-            ($operator === '!==' && $value === '0')
+            ($operator === '>' && $value === '0')
+            || ($operator === '>=' && $value === '1')
+            || ($operator === '!=' && $value === '0')
+            || ($operator === '!==' && $value === '0')
         ) {
             $shouldNegate = false;
         } elseif (
-            ($operator === '==' && $value === '0') ||
-            ($operator === '===' && $value === '0') ||
-            ($operator === '<' && $value === '1') ||
-            ($operator === '<=' && $value === '0')
+            ($operator === '==' && $value === '0')
+            || ($operator === '===' && $value === '0')
+            || ($operator === '<' && $value === '1')
+            || ($operator === '<=' && $value === '0')
         ) {
             $shouldNegate = true;
         } else {

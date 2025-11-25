@@ -68,7 +68,7 @@ class PreferIsGuestOverUserIdCheckSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
         $content = '';
 
-        for ($i = $start; $i < $end; $i++) {
+        for ($i = $start; $i < $end; ++$i) {
             if ($tokens[$i]['code'] !== T_WHITESPACE) {
                 $content .= $tokens[$i]['content'];
             }

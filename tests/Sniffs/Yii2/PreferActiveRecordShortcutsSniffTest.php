@@ -8,6 +8,10 @@ use DevStrict\Tests\BaseTest;
 
 /**
  * Tests for PreferActiveRecordShortcutsSniff.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class PreferActiveRecordShortcutsSniffTest extends BaseTest
 {

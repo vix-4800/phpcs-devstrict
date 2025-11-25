@@ -24,10 +24,6 @@ class ForbiddenAttributesSniff implements Sniff
         return [T_ATTRIBUTE];
     }
 
-    /**
-     * @param File $phpcsFile
-     * @param int  $stackPtr
-     */
     public function process(File $phpcsFile, int $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();

@@ -8,6 +8,10 @@ use DevStrict\Tests\BaseTest;
 
 /**
  * Tests for DisallowGotoStatementSniff.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class DisallowGotoStatementSniffTest extends BaseTest
 {
