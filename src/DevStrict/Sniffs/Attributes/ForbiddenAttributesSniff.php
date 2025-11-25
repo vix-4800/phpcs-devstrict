@@ -14,7 +14,7 @@ class ForbiddenAttributesSniff implements Sniff
      *
      * @var array<string>
      */
-    public $forbiddenAttributes = [];
+    public array $forbiddenAttributes = [];
 
     /**
      * @return array<int|string>
