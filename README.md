@@ -5,7 +5,7 @@
 ![PHPStan](https://img.shields.io/badge/style-level%208-brightgreen.svg?&label=phpstan)
 ![PHP-CS-Fixer](https://img.shields.io/badge/fixer-enabled-brightgreen.svg?&label=php-cs-fixer)
 ![PHPUnit](https://img.shields.io/badge/tested-enabled-brightgreen.svg?&label=phpunit)
-[![PHP Version](https://img.shields.io/badge/php-%5E7.4%20%7C%7C%20%5E8.0-blue)](https://www.php.net/)
+[![PHP Version](https://img.shields.io/badge/php-%5E8.3-blue)](https://www.php.net/)
 
 A comprehensive set of strict PHP_CodeSniffer rules for general PHP, Laravel, and Yii2 projects to maintain high code
 quality standards in your projects.
@@ -14,7 +14,7 @@ quality standards in your projects.
 
 ### Requirements
 
-- PHP 7.4 or higher
+- PHP 8.3 or higher
 - Composer
 
 ### Install via Composer
