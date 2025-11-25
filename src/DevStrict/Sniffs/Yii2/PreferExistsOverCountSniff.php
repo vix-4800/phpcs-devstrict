@@ -122,10 +122,11 @@ class PreferExistsOverCountSniff implements Sniff
             T_IS_SMALLER_OR_EQUAL => '<=',
         ];
 
-        if (!isset($operatorMap[$token['code']])) {
+        if (!array_key_exists($token['code'], $operatorMap)) {
             return null;
         }
 
+        /** @var string $operator */
         $operator = $operatorMap[$token['code']];
 
         $valuePtr = $phpcsFile->findNext(T_WHITESPACE, $startPtr + 1, null, true);
