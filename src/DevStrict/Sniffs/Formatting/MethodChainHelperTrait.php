@@ -82,52 +82,54 @@ trait MethodChainHelperTrait
         $bracketDepth = 0;
         $braceDepth = 0;
 
-        for ($ptr = $startPtr + 1; $ptr < $endPtr; $ptr++) {
+        for ($ptr = $startPtr + 1; $ptr < $endPtr; ++$ptr) {
             $code = $tokens[$ptr]['code'];
 
             if ($code === T_OPEN_PARENTHESIS) {
-                $parenDepth++;
+                ++$parenDepth;
 
                 continue;
             }
 
-            if ($code === T_CLOSE_PARENTHESIS) {
-                if ($parenDepth > 0) {
-                    $parenDepth--;
-
-                    continue;
-                }
-            }
-
-            if ($code === T_OPEN_SQUARE_BRACKET || $code === T_OPEN_SHORT_ARRAY) {
-                $bracketDepth++;
+            if ($code === T_CLOSE_PARENTHESIS && $parenDepth > 0) {
+                --$parenDepth;
 
                 continue;
             }
 
-            if ($code === T_CLOSE_SQUARE_BRACKET || $code === T_CLOSE_SHORT_ARRAY) {
-                if ($bracketDepth > 0) {
-                    $bracketDepth--;
+            if (in_array($code, [T_OPEN_SQUARE_BRACKET, T_OPEN_SHORT_ARRAY], true)) {
+                ++$bracketDepth;
 
-                    continue;
-                }
+                continue;
+            }
+
+            if ((in_array($code, [T_CLOSE_SQUARE_BRACKET, T_CLOSE_SHORT_ARRAY], true)) && $bracketDepth > 0) {
+                --$bracketDepth;
+
+                continue;
             }
 
             if ($code === T_OPEN_CURLY_BRACKET) {
-                $braceDepth++;
+                ++$braceDepth;
 
                 continue;
             }
 
-            if ($code === T_CLOSE_CURLY_BRACKET) {
-                if ($braceDepth > 0) {
-                    $braceDepth--;
+            if ($code === T_CLOSE_CURLY_BRACKET && $braceDepth > 0) {
+                --$braceDepth;
 
-                    continue;
-                }
+                continue;
             }
 
-            if ($parenDepth > 0 || $bracketDepth > 0 || $braceDepth > 0) {
+            if ($parenDepth > 0) {
+                continue;
+            }
+
+            if ($bracketDepth > 0) {
+                continue;
+            }
+
+            if ($braceDepth > 0) {
                 continue;
             }
 

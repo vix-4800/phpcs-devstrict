@@ -50,7 +50,7 @@ class MethodChainingPerLineSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
         $line = $tokens[$stackPtr]['line'];
 
-        for ($ptr = $stackPtr + 1, $count = count($tokens); $ptr < $count && $tokens[$ptr]['line'] === $line; $ptr++) {
+        for ($ptr = $stackPtr + 1, $count = count($tokens); $ptr < $count && $tokens[$ptr]['line'] === $line; ++$ptr) {
             if (!in_array($tokens[$ptr]['code'], [T_OBJECT_OPERATOR, T_NULLSAFE_OBJECT_OPERATOR], true)) {
                 continue;
             }

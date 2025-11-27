@@ -47,6 +47,7 @@ class PreferIsGuestOverUserIdCheckSniff implements Sniff
         if (!isset($tokens[$open]['parenthesis_closer'])) {
             return;
         }
+
         $close = $tokens[$open]['parenthesis_closer'];
 
         if (!$this->isYiiUserIdInside($phpcsFile, $open + 1, $close)) {

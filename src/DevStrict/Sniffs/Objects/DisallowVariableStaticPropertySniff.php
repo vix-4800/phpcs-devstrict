@@ -57,7 +57,7 @@ class DisallowVariableStaticPropertySniff implements Sniff
         $tokens = $phpcsFile->getTokens();
         $nextCode = $tokens[$nextPtr]['code'];
 
-        return $nextCode === T_VARIABLE || $nextCode === T_DOLLAR;
+        return in_array($nextCode, [T_VARIABLE, T_DOLLAR], true);
     }
 
     /**
@@ -108,15 +108,15 @@ class DisallowVariableStaticPropertySniff implements Sniff
     {
         $depth = 1;
 
-        for ($ptr = $closePtr - 1; $ptr >= 0; $ptr--) {
+        for ($ptr = $closePtr - 1; $ptr >= 0; --$ptr) {
             if ($tokens[$ptr]['code'] === T_CLOSE_PARENTHESIS) {
-                $depth++;
+                ++$depth;
 
                 continue;
             }
 
             if ($tokens[$ptr]['code'] === T_OPEN_PARENTHESIS) {
-                $depth--;
+                --$depth;
 
                 if ($depth === 0) {
                     return $ptr;

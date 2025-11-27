@@ -15,7 +15,7 @@ class MethodChainingIndentationSniff implements Sniff
 {
     use MethodChainHelperTrait;
 
-    private const INDENT_SIZE = 4;
+    private const int INDENT_SIZE = 4;
 
     /**
      * {@inheritDoc}
@@ -111,7 +111,7 @@ class MethodChainingIndentationSniff implements Sniff
             $line = $tokens[$ptr]['line'];
 
             if ($line === $currentLine) {
-                $ptr--;
+                --$ptr;
 
                 continue;
             }
@@ -154,7 +154,7 @@ class MethodChainingIndentationSniff implements Sniff
         $lineStart = $ptr;
 
         while ($lineStart > 0 && $tokens[$lineStart - 1]['line'] === $line) {
-            $lineStart--;
+            --$lineStart;
         }
 
         return $lineStart;
@@ -165,7 +165,7 @@ class MethodChainingIndentationSniff implements Sniff
      */
     private function findFirstCodeOnLine(array $tokens, int $startPtr, int $endPtr): ?int
     {
-        for ($ptr = $startPtr; $ptr <= $endPtr; $ptr++) {
+        for ($ptr = $startPtr; $ptr <= $endPtr; ++$ptr) {
             if ($tokens[$ptr]['code'] === T_WHITESPACE) {
                 continue;
             }
