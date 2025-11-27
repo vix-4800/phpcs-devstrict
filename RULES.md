@@ -209,6 +209,79 @@ if (!in_array($status, ['pending', 'processing', 'cancelled'], true)) {
 
 ---
 
+## Formatting
+
+### DevStrict.Formatting.MethodChainingIndentation
+
+**Type:** Error
+
+**Description:** Enforces a consistent four-space indentation offset for multi-line method chains. The first chained
+call must be indented relative to the anchor expression and every subsequent operator must align with the preceding
+line. This mirrors the array indentation rule but for chained method calls.
+
+**Bad:**
+
+```php
+User::find()
+->where(['id' => $id])
+    ->select(['id'])
+    ->all();
+
+User::find()
+    ->where(['id' => $id])
+  ->limit(10)
+    ->all();
+```
+
+**Good:**
+
+```php
+User::find()
+    ->where(['id' => $id])
+    ->select(['id'])
+    ->limit(10)
+    ->all();
+
+User::find()->where(['id' => $id])->all();
+```
+
+---
+
+### DevStrict.Formatting.MethodChainingPerLine
+
+**Type:** Error
+
+**Description:** Once a chained call is split across multiple lines, every further call in that chain must also be on
+its own line. Inline calls preceding the multi-line block are flagged, and only one operator per physical line is
+allowed, which keeps the chain legible.
+
+**Bad:**
+
+```php
+User::find()
+    ->where(['id' => $id])
+    ->select(['id'])->limit(10)
+    ->all();
+
+User::find()->where(['id' => $id])
+    ->select(['id'])
+    ->all();
+```
+
+**Good:**
+
+```php
+User::find()
+    ->where(['id' => $id])
+    ->select(['id'])
+    ->limit(10)
+    ->all();
+
+User::find()->where(['id' => $id])->all();
+```
+
+---
+
 ## Objects
 
 ### DevStrict.Objects.DisallowVariableStaticProperty

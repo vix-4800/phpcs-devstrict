@@ -62,6 +62,8 @@ Core rules applicable to all PHP projects. See [RULES.md](RULES.md) for detailed
 - `DevStrict.ControlStructures.DisallowGotoStatement` - Disallow `goto` statements as anti-pattern
 - `DevStrict.ControlStructures.DisallowThrowInTernary` - No exceptions in ternary operators
 - `DevStrict.ControlStructures.UseInArray` - Suggest `in_array()` for multiple OR comparisons
+- `DevStrict.Formatting.MethodChainingIndentation` - Enforce four-space indentation for multi-line method chains
+- `DevStrict.Formatting.MethodChainingPerLine` - Require one chained call per line once the chain is broken
 - `DevStrict.Attributes.ForbiddenAttributes` - Disallow specific attributes (e.g. `#[ArrayShape]`)
 - `DevStrict.Objects.DisallowVariableStaticProperty` - Forbid `$object::$property` static property access
 

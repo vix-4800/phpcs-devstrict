@@ -11,6 +11,14 @@
         <type>warning</type>
     </rule>
 
+    <rule ref="DevStrict.Formatting.MethodChainingIndentation">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="DevStrict.Formatting.MethodChainingPerLine">
+        <type>warning</type>
+    </rule>
+
     <rule ref="DevStrict.Yii2.DisallowResponseFormatAssignment">
         <type>warning</type>
     </rule>
