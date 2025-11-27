@@ -108,7 +108,7 @@ class ForbiddenAttributesSniffTest extends BaseTest
             '%s --standard=%s %s 2>&1',
             escapeshellarg($phpcsPath),
             escapeshellarg($rulesetPath),
-            escapeshellarg($tempFile)
+            escapeshellarg($tempFile),
         );
 
         $output = shell_exec($command);

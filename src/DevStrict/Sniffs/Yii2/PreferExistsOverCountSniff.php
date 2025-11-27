@@ -104,7 +104,7 @@ class PreferExistsOverCountSniff implements Sniff
     /**
      * Get the comparison type if it's a count existence check.
      *
-     * @return null|array{operator: string, value: string, shouldNegate: bool}
+     * @return array{operator: string, value: string, shouldNegate: bool}|null
      */
     private function getComparison(File $phpcsFile, int $startPtr): ?array
     {

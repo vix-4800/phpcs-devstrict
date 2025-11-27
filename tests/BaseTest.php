@@ -14,9 +14,9 @@ abstract class BaseTest extends TestCase
     /**
      * Run PHPCS on given content with specified sniff.
      *
-     * @param string $content PHP code to check
-     * @param null|string $sniff Specific sniff to run (e.g., 'DevStrict.Functions.DisallowIsNull')
-     *                           If null, all DevStrict sniffs will be run
+     * @param string      $content PHP code to check
+     * @param string|null $sniff   Specific sniff to run (e.g., 'DevStrict.Functions.DisallowIsNull')
+     *                             If null, all DevStrict sniffs will be run
      *
      * @return string PHPCS output
      */
@@ -32,13 +32,13 @@ abstract class BaseTest extends TestCase
                 '%s --standard=DevStrict --report-width=1000 --sniffs=%s %s 2>&1',
                 escapeshellarg($phpcsPath),
                 escapeshellarg($sniff),
-                escapeshellarg($tempFile)
+                escapeshellarg($tempFile),
             );
         } else {
             $command = sprintf(
                 '%s --standard=DevStrict --report-width=1000 %s 2>&1',
                 escapeshellarg($phpcsPath),
-                escapeshellarg($tempFile)
+                escapeshellarg($tempFile),
             );
         }
 
@@ -51,8 +51,8 @@ abstract class BaseTest extends TestCase
     /**
      * Assert that PHPCS output contains a warning.
      *
-     * @param string $output PHPCS output
-     * @param null|string $message Optional message fragment to check for
+     * @param string      $output  PHPCS output
+     * @param string|null $message Optional message fragment to check for
      */
     protected function assertContainsWarning(string $output, ?string $message = null): void
     {
@@ -66,8 +66,8 @@ abstract class BaseTest extends TestCase
     /**
      * Assert that PHPCS output contains an error.
      *
-     * @param string $output PHPCS output
-     * @param null|string $message Optional message fragment to check for
+     * @param string      $output  PHPCS output
+     * @param string|null $message Optional message fragment to check for
      */
     protected function assertContainsError(string $output, ?string $message = null): void
     {
