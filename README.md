@@ -63,6 +63,7 @@ Core rules applicable to all PHP projects. See [RULES.md](RULES.md) for detailed
 - `DevStrict.ControlStructures.DisallowThrowInTernary` - No exceptions in ternary operators
 - `DevStrict.ControlStructures.UseInArray` - Suggest `in_array()` for multiple OR comparisons
 - `DevStrict.Attributes.ForbiddenAttributes` - Disallow specific attributes (e.g. `#[ArrayShape]`)
+- `DevStrict.Objects.DisallowVariableStaticProperty` - Forbid `$object::$property` static property access
 
 ### DevStrict/Laravel
 

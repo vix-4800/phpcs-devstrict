@@ -27,6 +27,10 @@
         <type>warning</type>
     </rule>
 
+    <rule ref="DevStrict.Objects.DisallowVariableStaticProperty">
+        <type>warning</type>
+    </rule>
+
     <rule ref="DevStrict.Attributes.ForbiddenAttributes">
         <type>warning</type>
         <properties>

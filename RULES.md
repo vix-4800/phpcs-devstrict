@@ -209,6 +209,31 @@ if (!in_array($status, ['pending', 'processing', 'cancelled'], true)) {
 
 ---
 
+## Objects
+
+### DevStrict.Objects.DisallowVariableStaticProperty
+
+**Type:** Error
+
+**Description:** Static properties must be accessed via class names (or `self`/`static`), never via an object variable.
+Using an instance to reach static storage can hide bugs and violates common PHP conventions.
+
+**Bad:**
+
+```php
+$toast = $model::$toast_array[$model->toast];
+$value = ($service)::$cache['key'];
+```
+
+**Good:**
+
+```php
+$toast = User::$toast_array[$model->toast];
+$value = self::$cache['key'];
+```
+
+---
+
 ## Yii2
 
 ### DevStrict.Yii2.DisallowResponseFormatAssignment
