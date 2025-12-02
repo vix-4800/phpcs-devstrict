@@ -126,11 +126,7 @@ class MethodChainingPerLineSniff implements Sniff
                 return true;
             }
 
-            if (!$this->isSameChainContext($tokens, $operatorPtr, $prev)) {
-                return true;
-            }
-
-            return false;
+            return !$this->isSameChainContext($tokens, $operatorPtr, $prev);
         }
 
         return true;
