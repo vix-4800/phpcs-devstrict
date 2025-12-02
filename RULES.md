@@ -22,6 +22,7 @@ This document describes the custom coding standard rules implemented in the DevS
     - [DevStrict.Yii2.DisallowResponseFormatAssignment](#devstrictyii2disallowresponseformatassignment)
     - [DevStrict.Yii2.PreferActiveRecordShortcuts](#devstrictyii2preferactiverecordshortcuts)
     - [DevStrict.Yii2.PreferExistsOverCount](#devstrictyii2preferexistsovercount)
+    - [DevStrict.Yii2.PreferIsGuestOverUserIdCheck](#devstrictyii2preferisguestoveruseridcheck)
   - [Attributes](#attributes)
     - [DevStrict.Attributes.ForbiddenAttributes](#devstrictattributesforbiddenattributes)
 
@@ -486,6 +487,67 @@ class UserController extends Controller
         }
 
         $hasRecords = Post::find()->where(['published' => true])->exists();
+    }
+}
+```
+
+---
+
+### DevStrict.Yii2.PreferIsGuestOverUserIdCheck
+
+**Type:** Warning
+
+**Description:** Suggests using `Yii::$app->user->isGuest` instead of checking `Yii::$app->user->id` directly against
+`null` or with `empty()`. The `isGuest` property is more semantic and clearly expresses the intent of checking whether
+a user is authenticated. It's also more reliable as it uses Yii2's internal authentication state rather than relying on
+the ID being null.
+
+**Bad:**
+
+```php
+class SiteController extends Controller
+{
+    public function actionProfile()
+    {
+        if (empty(Yii::$app->user->id)) {
+            return $this->redirect(['login']);
+        }
+
+        if (Yii::$app->user->id === null) {
+            throw new ForbiddenHttpException();
+        }
+
+        if (Yii::$app->user->id == null) {
+            return $this->asJson(['error' => 'Not authenticated']);
+        }
+
+        $isLoggedIn = !empty(Yii::$app->user->id);
+        $isAuthenticated = Yii::$app->user->id !== null;
+    }
+}
+```
+
+**Good:**
+
+```php
+class SiteController extends Controller
+{
+    public function actionProfile()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['login']);
+        }
+
+        if (Yii::$app->user->isGuest) {
+            throw new ForbiddenHttpException();
+        }
+
+        if (Yii::$app->user->isGuest) {
+            return $this->asJson(['error' => 'Not authenticated']);
+        }
+
+        $isLoggedIn = !Yii::$app->user->isGuest;
+        $isAuthenticated = !Yii::$app->user->isGuest;
     }
 }
 ```

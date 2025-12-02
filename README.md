@@ -92,7 +92,8 @@ Rules for Yii2 framework:
   `findOne()`/`findAll()` over `find()->where()->one()/all()`
 - [`DevStrict.Yii2.PreferExistsOverCount`](RULES.md#devstrictyii2preferexistsovercount) - Use `exists()` instead of
   `count() > 0` for better performance
-- `DevStrict.Yii2.PreferIsGuestOverUserIdCheck` - Use `Yii::$app->user->isGuest` instead of checking `id` directly
+- [`DevStrict.Yii2.PreferIsGuestOverUserIdCheck`](RULES.md#devstrictyii2preferisguestoveruseridcheck) - Use
+  `Yii::$app->user->isGuest` instead of checking `id` directly
 
 ## Development
 
