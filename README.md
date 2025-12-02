@@ -57,15 +57,24 @@ Core rules applicable to all PHP projects. See [RULES.md](RULES.md) for detailed
 
 **Includes:**
 
-- `DevStrict.Attributes.ForbiddenAttributes` - Disallow specific attributes (e.g. `#[ArrayShape]`)
-- `DevStrict.ControlStructures.DisallowCountInLoop` - Prevent `count()` in loop conditions for performance
-- `DevStrict.ControlStructures.DisallowGotoStatement` - Disallow `goto` statements as anti-pattern
-- `DevStrict.ControlStructures.DisallowThrowInTernary` - No exceptions in ternary operators
-- `DevStrict.ControlStructures.UseInArray` - Suggest `in_array()` for multiple OR comparisons
-- `DevStrict.Formatting.MethodChainingIndentation` - Enforce four-space indentation for multi-line method chains
-- `DevStrict.Formatting.MethodChainingPerLine` - Require one chained call per line once the chain is broken
-- `DevStrict.Functions.DisallowCastFunctions` - Use type casts instead of `strval()`, `intval()`, `floatval()`, `boolval()`
-- `DevStrict.Objects.DisallowVariableStaticProperty` - Forbid `$object::$property` static property access
+- [`DevStrict.Attributes.ForbiddenAttributes`](RULES.md#devstrictattributesforbiddenattributes) - Disallow specific
+  attributes (e.g. `#[ArrayShape]`)
+- [`DevStrict.ControlStructures.DisallowCountInLoop`](RULES.md#devstrictcontrolstructuresdisallowcountinloop) -
+  Prevent `count()` in loop conditions for performance
+- [`DevStrict.ControlStructures.DisallowGotoStatement`](RULES.md#devstrictcontrolstructuresdisallowgotostatement) -
+  Disallow `goto` statements as anti-pattern
+- [`DevStrict.ControlStructures.DisallowThrowInTernary`](RULES.md#devstrictcontrolstructuresdisallowthrowinternary) -
+  No exceptions in ternary operators
+- [`DevStrict.ControlStructures.UseInArray`](RULES.md#devstrictcontrolstructuresuseinarray) - Suggest `in_array()`
+  for multiple OR comparisons
+- [`DevStrict.Formatting.MethodChainingIndentation`](RULES.md#devstrictformattingmethodchainingindentation) - Enforce
+  four-space indentation for multi-line method chains
+- [`DevStrict.Formatting.MethodChainingPerLine`](RULES.md#devstrictformattingmethodchainingperline) - Require one
+  chained call per line once the chain is broken
+- [`DevStrict.Functions.DisallowCastFunctions`](RULES.md#devstrictfunctionsdisallowcastfunctions) - Use type casts
+  instead of `strval()`, `intval()`, `floatval()`, `boolval()`
+- [`DevStrict.Objects.DisallowVariableStaticProperty`](RULES.md#devstrictobjectsdisallowvariablestaticproperty) -
+  Forbid `$object::$property` static property access
 
 ### DevStrict/Laravel
 
@@ -77,9 +86,12 @@ Rules for Yii2 framework:
 
 **Includes:**
 
-- `DevStrict.Yii2.DisallowResponseFormatAssignment` - Use controller methods like `asJson()` instead of direct assignment
-- `DevStrict.Yii2.PreferActiveRecordShortcuts` - Suggest `findOne()`/`findAll()` over `find()->where()->one()/all()`
-- `DevStrict.Yii2.PreferExistsOverCount` - Use `exists()` instead of `count() > 0` for better performance
+- [`DevStrict.Yii2.DisallowResponseFormatAssignment`](RULES.md#devstrictyii2disallowresponseformatassignment) - Use
+  controller methods like `asJson()` instead of direct assignment
+- [`DevStrict.Yii2.PreferActiveRecordShortcuts`](RULES.md#devstrictyii2preferactiverecordshortcuts) - Suggest
+  `findOne()`/`findAll()` over `find()->where()->one()/all()`
+- [`DevStrict.Yii2.PreferExistsOverCount`](RULES.md#devstrictyii2preferexistsovercount) - Use `exists()` instead of
+  `count() > 0` for better performance
 - `DevStrict.Yii2.PreferIsGuestOverUserIdCheck` - Use `Yii::$app->user->isGuest` instead of checking `id` directly
 
 ## Development
