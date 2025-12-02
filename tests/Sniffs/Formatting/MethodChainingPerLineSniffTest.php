@@ -41,6 +41,18 @@ User::find()
         $this->assertNoViolations($result);
     }
 
+    public function testFirstInlineCallBeforeMultilineChainPasses(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+$service->firstCall()
+    ->secondCall()
+    ->thirdCall();
+', 'DevStrict.Formatting.MethodChainingPerLine');
+
+        $this->assertNoViolations($result);
+    }
+
     public function testInlineChainPasses(): void
     {
         $result = $this->runPhpcs('<?php

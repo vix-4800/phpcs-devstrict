@@ -94,6 +94,12 @@ class MethodChainingPerLineSniff implements Sniff
                 break;
             }
 
+            if ($this->isFirstOperatorInChain($phpcsFile, $prev)) {
+                $searchPtr = $prev - 1;
+
+                continue;
+            }
+
             if (!isset($this->reportedInlineOperators[$prev])) {
                 $this->reportedInlineOperators[$prev] = true;
                 $phpcsFile->addError(
@@ -105,6 +111,29 @@ class MethodChainingPerLineSniff implements Sniff
 
             $searchPtr = $prev - 1;
         }
+    }
+
+    /**
+     * Determines whether the provided operator is the first chained call in its context.
+     */
+    private function isFirstOperatorInChain(File $phpcsFile, int $operatorPtr): bool
+    {
+        $tokens = $phpcsFile->getTokens();
+        $searchPtr = $operatorPtr - 1;
+
+        while (($prev = $phpcsFile->findPrevious([T_OBJECT_OPERATOR, T_NULLSAFE_OBJECT_OPERATOR], $searchPtr, null, false)) !== false) {
+            if ($this->hasChainBreakBetween($phpcsFile, $prev, $operatorPtr)) {
+                return true;
+            }
+
+            if (!$this->isSameChainContext($tokens, $operatorPtr, $prev)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
