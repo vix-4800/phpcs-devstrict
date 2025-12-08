@@ -17,6 +17,7 @@ This document describes the custom coding standard rules implemented in the DevS
     - [DevStrict.Formatting.MethodChainingIndentation](#devstrictformattingmethodchainingindentation)
     - [DevStrict.Formatting.MethodChainingPerLine](#devstrictformattingmethodchainingperline)
     - [DevStrict.Formatting.ConsistentStatementIndentation](#devstrictformattingconsistentstatementindentation)
+    - [DevStrict.Formatting.DisallowConsecutivePhpTags](#devstrictformattingdisallowconsecutivephptags)
   - [Objects](#objects)
     - [DevStrict.Objects.DisallowVariableStaticProperty](#devstrictobjectsdisallowvariablestaticproperty)
   - [Yii2](#yii2)
@@ -314,6 +315,50 @@ Modal::begin([
 ]);
     echo $imgTag;
 Modal::end();
+```
+
+---
+
+### DevStrict.Formatting.DisallowConsecutivePhpTags
+
+**Type:** Warning
+
+**Description:** Detects blocks where PHP tags are closed and immediately reopened multiple times in succession
+(`?>...<?php` or `?>...<?=`). This pattern often appears in legacy view files and makes the code harder to read.
+Consider staying in PHP mode and using `echo` for output instead of repeatedly switching contexts.
+
+**Configurable Properties:**
+
+| Property                 | Type | Default | Description                                               |
+|--------------------------|------|---------|-----------------------------------------------------------|
+| `maxConsecutiveSwitches` | int  | 2       | Number of consecutive tag switches before a warning fires |
+
+**Bad:**
+
+```php
+<?php
+if ($conditionA) : ?>
+    <?= $outputA ?>
+<?php
+endif; ?>
+<?php
+if ($conditionB) : ?>
+    <?= $outputB ?>
+<?php
+endif; ?>
+```
+
+**Good:**
+
+```php
+<?php
+if ($conditionA) {
+    echo $outputA;
+}
+if ($conditionB) {
+    echo $outputB;
+}
+?>
 ```
 
 ---

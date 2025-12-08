@@ -73,6 +73,8 @@ Core rules applicable to all PHP projects. See [RULES.md](RULES.md) for detailed
     chained call per line once the chain is broken
 - [`DevStrict.Formatting.ConsistentStatementIndentation`](RULES.md#devstrictformattingconsistentstatementindentation) -
     Keep statements at the same nesting level aligned with identical indentation
+- [`DevStrict.Formatting.DisallowConsecutivePhpTags`](RULES.md#devstrictformattingdisallowconsecutivephptags) -
+    Warn when `?>...<?php` switches appear repeatedly in view files
 - [`DevStrict.Functions.DisallowCastFunctions`](RULES.md#devstrictfunctionsdisallowcastfunctions) - Use type casts
     instead of `strval()`, `intval()`, `floatval()`, `boolval()`
 - [`DevStrict.Objects.DisallowVariableStaticProperty`](RULES.md#devstrictobjectsdisallowvariablestaticproperty) -
