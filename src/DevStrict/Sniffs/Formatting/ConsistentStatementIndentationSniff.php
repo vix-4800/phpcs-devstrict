@@ -112,7 +112,7 @@ class ConsistentStatementIndentationSniff implements Sniff
         ];
 
         // Search backwards for the previous statement
-        for ($i = $stackPtr - 1; $i >= 0; $i--) {
+        for ($i = $stackPtr - 1; $i >= 0; --$i) {
             $token = $tokens[$i];
 
             // Skip if on the same line
@@ -166,7 +166,7 @@ class ConsistentStatementIndentationSniff implements Sniff
             if ($tokens[$whitespace]['code'] === T_WHITESPACE) {
                 // Need to preserve newline and replace spaces
                 $content = $tokens[$whitespace]['content'];
-                $newContent = preg_replace('/\n[ ]*$/', "\n" . str_repeat(' ', $expectedIndent), $content);
+                $newContent = preg_replace('/\n[ ]*$/', "\n" . str_repeat(' ', $expectedIndent), (string) $content);
 
                 if (is_string($newContent)) {
                     $phpcsFile->fixer->replaceToken($whitespace, $newContent);

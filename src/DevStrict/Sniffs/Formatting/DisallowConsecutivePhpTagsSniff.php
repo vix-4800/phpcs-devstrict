@@ -104,7 +104,7 @@ class DisallowConsecutivePhpTagsSniff implements Sniff
 
             // Check if there's only whitespace/HTML between close and open tags
             if ($this->hasOnlyWhitespaceOrMinimalHtml($tokens, $ptr + 1, $nextPhpTag)) {
-                $count++;
+                ++$count;
                 $involvedCloseTags[] = $ptr;
 
                 // Find the next close tag after this open tag
@@ -130,7 +130,7 @@ class DisallowConsecutivePhpTagsSniff implements Sniff
      */
     private function findNextPhpOpenTag(array $tokens, int $start, int $end): ?int
     {
-        for ($i = $start; $i < $end; $i++) {
+        for ($i = $start; $i < $end; ++$i) {
             if ($tokens[$i]['code'] === T_OPEN_TAG || $tokens[$i]['code'] === T_OPEN_TAG_WITH_ECHO) {
                 return $i;
             }
@@ -151,7 +151,7 @@ class DisallowConsecutivePhpTagsSniff implements Sniff
      */
     private function findNextCloseTag(array $tokens, int $start, int $end): ?int
     {
-        for ($i = $start; $i < $end; $i++) {
+        for ($i = $start; $i < $end; ++$i) {
             if ($tokens[$i]['code'] === T_CLOSE_TAG) {
                 return $i;
             }
@@ -167,7 +167,7 @@ class DisallowConsecutivePhpTagsSniff implements Sniff
      */
     private function hasOnlyWhitespaceOrMinimalHtml(array $tokens, int $start, int $end): bool
     {
-        for ($i = $start; $i < $end; $i++) {
+        for ($i = $start; $i < $end; ++$i) {
             $code = $tokens[$i]['code'];
 
             if ($code === T_WHITESPACE) {
@@ -176,7 +176,7 @@ class DisallowConsecutivePhpTagsSniff implements Sniff
 
             if ($code === T_INLINE_HTML) {
                 // Check if the inline HTML is only whitespace
-                $content = trim($tokens[$i]['content']);
+                $content = trim((string) $tokens[$i]['content']);
 
                 if ($content !== '') {
                     return false;
