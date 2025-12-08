@@ -37,6 +37,7 @@ class ConsistentStatementIndentationSniff implements Sniff
             T_SWITCH,
             T_TRY,
             T_THROW,
+            T_VARIABLE,
         ];
     }
 
@@ -59,35 +60,35 @@ class ConsistentStatementIndentationSniff implements Sniff
         $currentConditions = $token['conditions'] ?? [];
         $currentIndent = $token['column'] - 1;
 
-        // Find the next statement at the same level with same conditions
-        $nextStatement = $this->findNextStatementAtSameLevel($phpcsFile, $stackPtr, $currentLevel, $currentConditions);
-        if ($nextStatement === null) {
+        // Find the previous statement at the same level with same conditions
+        $prevStatement = $this->findPreviousStatementAtSameLevel($phpcsFile, $stackPtr, $currentLevel, $currentConditions);
+        if ($prevStatement === null) {
             return;
         }
 
-        $nextIndent = $tokens[$nextStatement]['column'] - 1;
+        $prevIndent = $tokens[$prevStatement]['column'] - 1;
 
         // If indentation differs and current has more spaces, report warning
-        if ($currentIndent !== $nextIndent && $currentIndent > $nextIndent) {
+        if ($currentIndent !== $prevIndent && $currentIndent > $prevIndent) {
             $error = sprintf(
-                'Statement indentation is inconsistent with next statement at same level; found %d spaces but next statement has %d',
+                'Statement indentation is inconsistent with previous statement at same level; found %d spaces but previous statement has %d',
                 $currentIndent,
-                $nextIndent
+                $prevIndent
             );
 
             $fix = $phpcsFile->addFixableWarning($error, $stackPtr, 'InconsistentIndentation');
             if ($fix === true) {
-                $this->fixIndentation($phpcsFile, $stackPtr, (int) $nextIndent);
+                $this->fixIndentation($phpcsFile, $stackPtr, $prevIndent);
             }
         }
     }
 
     /**
-     * Find the next statement at the same nesting level with same conditions.
+     * Find the previous statement at the same nesting level with same conditions.
      *
      * @param array<int, int> $conditions
      */
-    private function findNextStatementAtSameLevel(File $phpcsFile, int $stackPtr, int $level, array $conditions): ?int
+    private function findPreviousStatementAtSameLevel(File $phpcsFile, int $stackPtr, int $level, array $conditions): ?int
     {
         $tokens = $phpcsFile->getTokens();
         $currentLine = $tokens[$stackPtr]['line'];
@@ -103,11 +104,12 @@ class ConsistentStatementIndentationSniff implements Sniff
             T_SWITCH,
             T_TRY,
             T_THROW,
+            T_VARIABLE,
             T_STRING, // For static method calls like Modal::end()
         ];
 
-        // Search forward for the next statement
-        for ($i = $stackPtr + 1; $i < count($tokens); $i++) {
+        // Search backwards for the previous statement
+        for ($i = $stackPtr - 1; $i >= 0; $i--) {
             $token = $tokens[$i];
 
             // Skip if on the same line
