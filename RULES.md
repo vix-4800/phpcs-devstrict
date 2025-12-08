@@ -16,6 +16,7 @@ This document describes the custom coding standard rules implemented in the DevS
   - [Formatting](#formatting)
     - [DevStrict.Formatting.MethodChainingIndentation](#devstrictformattingmethodchainingindentation)
     - [DevStrict.Formatting.MethodChainingPerLine](#devstrictformattingmethodchainingperline)
+    - [DevStrict.Formatting.ConsistentStatementIndentation](#devstrictformattingconsistentstatementindentation)
   - [Objects](#objects)
     - [DevStrict.Objects.DisallowVariableStaticProperty](#devstrictobjectsdisallowvariablestaticproperty)
   - [Yii2](#yii2)
@@ -288,6 +289,35 @@ User::find()->where(['id' => $id])->all();
 
 ---
 
+### DevStrict.Formatting.ConsistentStatementIndentation
+
+**Type:** Warning
+
+**Description:** Keeps statements that share the same nesting level aligned to the same indentation column. This makes
+deeply nested callbacks and closures easier to scan and prevents stray blocks that drift to the right.
+
+**Bad:**
+
+```php
+Modal::begin([
+    'id' => 'photo-modal',
+]);
+        echo $imgTag; // four spaces too many
+    Modal::end();
+```
+
+**Good:**
+
+```php
+Modal::begin([
+    'id' => 'photo-modal',
+]);
+    echo $imgTag;
+Modal::end();
+```
+
+---
+
 ## Objects
 
 ### DevStrict.Objects.DisallowVariableStaticProperty
@@ -498,8 +528,8 @@ class UserController extends Controller
 **Type:** Warning
 
 **Description:** Suggests using `Yii::$app->user->isGuest` instead of checking `Yii::$app->user->id` directly against
-`null` or with `empty()`. The `isGuest` property is more semantic and clearly expresses the intent of checking whether
-a user is authenticated. It's also more reliable as it uses Yii2's internal authentication state rather than relying on
+`null` or with `empty()`. The `isGuest` property is more semantic and clearly expresses the intent of checking whether a
+user is authenticated. It's also more reliable as it uses Yii2's internal authentication state rather than relying on
 the ID being null.
 
 **Bad:**
