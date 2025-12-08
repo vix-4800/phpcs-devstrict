@@ -93,8 +93,8 @@ class DisallowConsecutivePhpTagsSniffTest extends BaseTest
         // Should contain exactly one warning, not multiple
         $this->assertContainsWarning($result, 'consecutive PHP tag switches');
 
-        // Count WARNING occurrences - should be 1
-        $warningCount = substr_count($result, 'WARNING');
+        preg_match_all('/^\s*\d+\s*\|\s*WARNING\s*\|/m', $result, $matches);
+        $warningCount = count($matches[0]);
         $this->assertSame(1, $warningCount, 'Expected exactly one warning for the sequence');
     }
 
