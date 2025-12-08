@@ -51,6 +51,7 @@ class ConsistentStatementIndentationSniff implements Sniff
 
         // Only process if this token is the first non-whitespace on its line
         $firstOnLine = $phpcsFile->findFirstOnLine(T_WHITESPACE, $stackPtr, true);
+
         if ($firstOnLine !== $stackPtr) {
             return;
         }
@@ -62,6 +63,7 @@ class ConsistentStatementIndentationSniff implements Sniff
 
         // Find the previous statement at the same level with same conditions
         $prevStatement = $this->findPreviousStatementAtSameLevel($phpcsFile, $stackPtr, $currentLevel, $currentConditions);
+
         if ($prevStatement === null) {
             return;
         }
@@ -77,6 +79,7 @@ class ConsistentStatementIndentationSniff implements Sniff
             );
 
             $fix = $phpcsFile->addFixableWarning($error, $stackPtr, 'InconsistentIndentation');
+
             if ($fix === true) {
                 $this->fixIndentation($phpcsFile, $stackPtr, $prevIndent);
             }
@@ -124,6 +127,7 @@ class ConsistentStatementIndentationSniff implements Sniff
 
             // Check if it's the first token on its line
             $firstOnLine = $phpcsFile->findFirstOnLine(T_WHITESPACE, $i, true);
+
             if ($firstOnLine !== $i) {
                 continue;
             }
@@ -158,10 +162,12 @@ class ConsistentStatementIndentationSniff implements Sniff
         } else {
             // Find the whitespace token before
             $whitespace = $stackPtr - 1;
+
             if ($tokens[$whitespace]['code'] === T_WHITESPACE) {
                 // Need to preserve newline and replace spaces
                 $content = $tokens[$whitespace]['content'];
                 $newContent = preg_replace('/\n[ ]*$/', "\n" . str_repeat(' ', $expectedIndent), $content);
+
                 if (is_string($newContent)) {
                     $phpcsFile->fixer->replaceToken($whitespace, $newContent);
                 }

@@ -44,6 +44,7 @@ class DisallowConsecutivePhpTagsSniff implements Sniff
         // Reset processed tags for each new file
         static $currentFile = '';
         $filename = $phpcsFile->getFilename();
+
         if ($currentFile !== $filename) {
             $currentFile = $filename;
             $this->processedTags = [];
@@ -78,6 +79,7 @@ class DisallowConsecutivePhpTagsSniff implements Sniff
      * Count how many consecutive close->open tag pairs exist starting from the given position.
      *
      * @param array<int, array<string, mixed>> $tokens
+     *
      * @return array{0: int, 1: array<int>} Count and list of involved close tag pointers
      */
     private function countConsecutiveTagSwitches(array $tokens, int $startPtr): array
@@ -175,9 +177,11 @@ class DisallowConsecutivePhpTagsSniff implements Sniff
             if ($code === T_INLINE_HTML) {
                 // Check if the inline HTML is only whitespace
                 $content = trim($tokens[$i]['content']);
+
                 if ($content !== '') {
                     return false;
                 }
+
                 continue;
             }
 
