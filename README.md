@@ -39,23 +39,17 @@ Create a `phpcs.xml` file in your project root:
     <file>tests</file>
 
     <!-- Use DevStrict rules -->
-    <rule ref="DevStrict/Common"/>
-
-    <!-- For Laravel projects -->
-    <!-- <rule ref="DevStrict/Laravel"/> -->
-
-    <!-- For Yii2 projects -->
-    <!-- <rule ref="DevStrict/Yii"/> -->
+    <rule ref="DevStrict"/>
 </ruleset>
 ```
 
 ## Rulesets
 
-### DevStrict/Common
+### DevStrict
 
-Core rules applicable to all PHP projects. See [RULES.md](RULES.md) for detailed documentation of each rule.
+The main ruleset includes all available rules. See [RULES.md](RULES.md) for detailed documentation of each rule.
 
-**Includes:**
+**Core Rules:**
 
 - [`DevStrict.Attributes.ForbiddenAttributes`](RULES.md#devstrictattributesforbiddenattributes) - Disallow specific
     attributes (e.g. `#[ArrayShape]`)
@@ -80,15 +74,7 @@ Core rules applicable to all PHP projects. See [RULES.md](RULES.md) for detailed
 - [`DevStrict.Objects.DisallowVariableStaticProperty`](RULES.md#devstrictobjectsdisallowvariablestaticproperty) -
     Forbid `$object::$property` static property access
 
-### DevStrict/Laravel
-
-Laravel-specific rules (coming soon).
-
-### DevStrict/Yii
-
-Rules for Yii2 framework:
-
-**Includes:**
+**Yii2 Framework Rules:**
 
 - [`DevStrict.Yii2.DisallowResponseFormatAssignment`](RULES.md#devstrictyii2disallowresponseformatassignment) - Use
     controller methods like `asJson()` instead of direct assignment
