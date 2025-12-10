@@ -56,6 +56,10 @@ class ConsistentStatementIndentationSniff implements Sniff
             return;
         }
 
+        if ($this->isInsideMultiLineExpression($phpcsFile, $stackPtr)) {
+            return;
+        }
+
         // Get the nesting level and conditions of this token
         $currentLevel = $token['level'] ?? 0;
         $currentConditions = $token['conditions'] ?? [];
@@ -132,6 +136,10 @@ class ConsistentStatementIndentationSniff implements Sniff
                 continue;
             }
 
+            if ($this->isInsideMultiLineExpression($phpcsFile, $i)) {
+                continue;
+            }
+
             // Check level and conditions
             $tokenLevel = $token['level'] ?? 0;
             $tokenConditions = $token['conditions'] ?? [];
@@ -147,6 +155,48 @@ class ConsistentStatementIndentationSniff implements Sniff
         }
 
         return null;
+    }
+
+    /**
+     * Check if a token is inside a multi-line expression (arrays, function calls, etc.).
+     */
+    private function isInsideMultiLineExpression(File $phpcsFile, int $stackPtr): bool
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        if (isset($tokens[$stackPtr]['nested_parenthesis'])) {
+            foreach ($tokens[$stackPtr]['nested_parenthesis'] as $opener => $closer) {
+                if ($tokens[$opener]['line'] !== $tokens[$stackPtr]['line']) {
+                    return true;
+                }
+            }
+        }
+
+        $arrayOpener = $phpcsFile->findPrevious(T_OPEN_SHORT_ARRAY, $stackPtr - 1);
+
+        if ($arrayOpener !== false) {
+            $arrayCloser = $tokens[$arrayOpener]['bracket_closer'] ?? null;
+
+            if ($arrayCloser !== null && $arrayCloser > $stackPtr) {
+                if ($tokens[$arrayOpener]['line'] !== $tokens[$stackPtr]['line']) {
+                    return true;
+                }
+            }
+        }
+
+        $arrayOpener = $phpcsFile->findPrevious(T_ARRAY, $stackPtr - 1);
+
+        if ($arrayOpener !== false && isset($tokens[$arrayOpener]['parenthesis_closer'])) {
+            $arrayCloser = $tokens[$arrayOpener]['parenthesis_closer'];
+
+            if ($arrayCloser > $stackPtr) {
+                if ($tokens[$arrayOpener]['line'] !== $tokens[$stackPtr]['line']) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
