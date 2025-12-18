@@ -60,4 +60,12 @@
             </property>
         </properties>
     </rule>
+
+    <rule ref="DevStrict.Functions.PreferModernStringFunctions">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="DevStrict.Functions.PreferJsonValidate">
+        <type>warning</type>
+    </rule>
 </ruleset>
