@@ -71,6 +71,8 @@ The main ruleset includes all available rules. See [RULES.md](RULES.md) for deta
     Warn when `?>...<?php` switches appear repeatedly in view files
 - [`DevStrict.Functions.DisallowCastFunctions`](RULES.md#devstrictfunctionsdisallowcastfunctions) - Use type casts
     instead of `strval()`, `intval()`, `floatval()`, `boolval()`
+- [`DevStrict.Functions.PreferModernStringFunctions`](RULES.md#devstrictfunctionsprefermodernstringfunctions) -
+    Suggest modern string functions (`str_contains()`, `str_starts_with()`, `str_ends_with()`) instead of `strpos()`
 - [`DevStrict.Objects.DisallowVariableStaticProperty`](RULES.md#devstrictobjectsdisallowvariablestaticproperty) -
     Forbid `$object::$property` static property access
 

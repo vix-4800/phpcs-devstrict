@@ -8,6 +8,7 @@ This document describes the custom coding standard rules implemented in the DevS
   - [Table of Contents](#table-of-contents)
   - [Functions](#functions)
     - [DevStrict.Functions.DisallowCastFunctions](#devstrictfunctionsdisallowcastfunctions)
+    - [DevStrict.Functions.PreferModernStringFunctions](#devstrictfunctionsprefermodernstringfunctions)
   - [Control Structures](#control-structures)
     - [DevStrict.ControlStructures.DisallowCountInLoop](#devstrictcontrolstructuresdisallowcountinloop)
     - [DevStrict.ControlStructures.DisallowGotoStatement](#devstrictcontrolstructuresdisallowgotostatement)
@@ -57,6 +58,52 @@ $integer = (int) $var;
 $float = (float) $var;
 $boolean = (bool) $var;
 $hex = (int) hexdec($value);
+```
+
+---
+
+### DevStrict.Functions.PreferModernStringFunctions
+
+**Type:** Warning
+
+**Description:** Suggests using modern string functions (`str_contains()`, `str_starts_with()`, `str_ends_with()`)
+instead of `strpos()` with comparisons. PHP 8.0 introduced dedicated string search functions that are more readable
+and semantic.
+
+**Bad:**
+
+```php
+// Instead of checking if string contains substring
+if (strpos($haystack, $needle) !== false) {
+    // ...
+}
+
+// Instead of checking if string starts with substring
+if (strpos($haystack, $needle) === 0) {
+    // ...
+}
+
+// Case-insensitive variants
+if (stripos($haystack, $needle) !== false) {
+    // ...
+}
+```
+
+**Good:**
+
+```php
+// More readable and explicit
+if (str_contains($haystack, $needle)) {
+    // ...
+}
+
+if (str_starts_with($haystack, $needle)) {
+    // ...
+}
+
+if (str_ends_with($haystack, $needle)) {
+    // ...
+}
 ```
 
 ---
