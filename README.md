@@ -73,6 +73,8 @@ The main ruleset includes all available rules. See [RULES.md](RULES.md) for deta
     instead of `strval()`, `intval()`, `floatval()`, `boolval()`
 - [`DevStrict.Functions.PreferModernStringFunctions`](RULES.md#devstrictfunctionsprefermodernstringfunctions) -
     Suggest modern string functions (`str_contains()`, `str_starts_with()`, `str_ends_with()`) instead of `strpos()`
+- [`DevStrict.Functions.PreferJsonValidate`](RULES.md#devstrictfunctionspreferjsonvalidate) -
+    Suggest `json_validate()` instead of `json_decode()` for validation-only use cases
 - [`DevStrict.Objects.DisallowVariableStaticProperty`](RULES.md#devstrictobjectsdisallowvariablestaticproperty) -
     Forbid `$object::$property` static property access
 

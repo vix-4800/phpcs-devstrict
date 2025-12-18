@@ -9,6 +9,7 @@ This document describes the custom coding standard rules implemented in the DevS
   - [Functions](#functions)
     - [DevStrict.Functions.DisallowCastFunctions](#devstrictfunctionsdisallowcastfunctions)
     - [DevStrict.Functions.PreferModernStringFunctions](#devstrictfunctionsprefermodernstringfunctions)
+    - [DevStrict.Functions.PreferJsonValidate](#devstrictfunctionspreferjsonvalidate)
   - [Control Structures](#control-structures)
     - [DevStrict.ControlStructures.DisallowCountInLoop](#devstrictcontrolstructuresdisallowcountinloop)
     - [DevStrict.ControlStructures.DisallowGotoStatement](#devstrictcontrolstructuresdisallowgotostatement)
@@ -103,6 +104,45 @@ if (str_starts_with($haystack, $needle)) {
 
 if (str_ends_with($haystack, $needle)) {
     // ...
+}
+```
+
+---
+
+### DevStrict.Functions.PreferJsonValidate
+
+**Type:** Warning
+
+**Description:** Suggests using `json_validate()` instead of `json_decode()` when only validation is needed. PHP 8.3 introduced `json_validate()` which is more efficient for checking JSON validity without parsing the entire structure. This rule detects patterns where `json_decode()` is used with `json_last_error()` checks or `JSON_THROW_ON_ERROR` flag.
+
+**Bad:**
+
+```php
+// Validation with json_last_error()
+$data = json_decode($json);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    throw new Exception('Invalid JSON');
+}
+
+// Validation with JSON_THROW_ON_ERROR
+try {
+    json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+} catch (JsonException $e) {
+    // Handle invalid JSON
+}
+```
+
+**Good:**
+
+```php
+// Direct validation without parsing overhead
+if (!json_validate($json)) {
+    throw new Exception('Invalid JSON');
+}
+
+// Or simply
+if (json_validate($json)) {
+    $data = json_decode($json, true);
 }
 ```
 
