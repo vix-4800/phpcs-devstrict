@@ -102,8 +102,8 @@ class PreferIsGuestOverUserIdCheckSniff implements Sniff
         $op = $tokens[$stackPtr]['content'];
 
         $message = $neg
-            ? "Use !Yii::\$app->user->isGuest instead of Yii::\$app->user->id {$op} null"
-            : "Use Yii::\$app->user->isGuest instead of Yii::\$app->user->id {$op} null";
+            ? sprintf('Use !Yii::$app->user->isGuest instead of Yii::$app->user->id %s null', $op)
+            : sprintf('Use Yii::$app->user->isGuest instead of Yii::$app->user->id %s null', $op);
 
         $phpcsFile->addWarning($message, $stackPtr, 'PreferIsGuestOverNullCheck');
     }
