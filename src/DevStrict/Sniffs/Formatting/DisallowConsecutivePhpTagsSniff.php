@@ -63,7 +63,7 @@ class DisallowConsecutivePhpTagsSniff implements Sniff
         if ($consecutiveCount >= $this->maxConsecutiveSwitches) {
             $warning = sprintf(
                 'Found %d consecutive PHP tag switches (?>...<?php). Consider staying in PHP mode and using echo/print for output.',
-                $consecutiveCount
+                $consecutiveCount,
             );
 
             $phpcsFile->addWarning($warning, $stackPtr, 'TooManyTagSwitches');

@@ -79,7 +79,7 @@ class ConsistentStatementIndentationSniff implements Sniff
             $error = sprintf(
                 'Statement indentation is inconsistent with previous statement at same level; found %d spaces but previous statement has %d',
                 $currentIndent,
-                $prevIndent
+                $prevIndent,
             );
 
             $fix = $phpcsFile->addFixableWarning($error, $stackPtr, 'InconsistentIndentation');
@@ -177,10 +177,8 @@ class ConsistentStatementIndentationSniff implements Sniff
         if ($arrayOpener !== false) {
             $arrayCloser = $tokens[$arrayOpener]['bracket_closer'] ?? null;
 
-            if ($arrayCloser !== null && $arrayCloser > $stackPtr) {
-                if ($tokens[$arrayOpener]['line'] !== $tokens[$stackPtr]['line']) {
-                    return true;
-                }
+            if ($arrayCloser !== null && $arrayCloser > $stackPtr && $tokens[$arrayOpener]['line'] !== $tokens[$stackPtr]['line']) {
+                return true;
             }
         }
 
@@ -189,10 +187,8 @@ class ConsistentStatementIndentationSniff implements Sniff
         if ($arrayOpener !== false && isset($tokens[$arrayOpener]['parenthesis_closer'])) {
             $arrayCloser = $tokens[$arrayOpener]['parenthesis_closer'];
 
-            if ($arrayCloser > $stackPtr) {
-                if ($tokens[$arrayOpener]['line'] !== $tokens[$stackPtr]['line']) {
-                    return true;
-                }
+            if ($arrayCloser > $stackPtr && $tokens[$arrayOpener]['line'] !== $tokens[$stackPtr]['line']) {
+                return true;
             }
         }
 
