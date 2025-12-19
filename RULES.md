@@ -481,9 +481,10 @@ $value = self::$cache['key'];
 
 **Type:** Warning
 
-**Description:** Disallows direct assignment to `Yii::$app->response->format`. In Yii2 controllers, it's better to use
-controller methods like `$this->asJson()`, `$this->asXml()`, etc., which automatically set the response format. This
-approach is more explicit, controller-centric, and follows Yii2 best practices.
+**Description:** Disallows direct assignment to `Yii::$app->response->format` for JSON and XML formats. In Yii2
+controllers, use `$this->asJson()` or `$this->asXml()` instead of manually setting the response format. This makes code
+more controller-centric and follows Yii2 best practices. Only checks JSON and XML formats since other formats may not
+have dedicated controller methods.
 
 **Bad:**
 
@@ -503,6 +504,12 @@ class SiteController extends Controller
         Yii::$app->response->format = 'json';
         return ['result' => $result];
     }
+
+    public function actionXml()
+    {
+        Yii::$app->response->format = Response::FORMAT_XML;
+        return ['data' => $data];
+    }
 }
 ```
 
@@ -521,12 +528,24 @@ class SiteController extends Controller
         return $this->asJson(['result' => $result]);
     }
 
+    public function actionXml()
+    {
+        return $this->asXml(['data' => $data]);
+    }
+
     // Or if you need more control:
     public function actionCustom()
     {
         $response = $this->asJson(['data' => $data]);
         $response->headers->set('X-Custom-Header', 'value');
         return $response;
+    }
+
+    // Other formats are not checked (no warning):
+    public function actionRaw()
+    {
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        return 'plain text';
     }
 }
 ```

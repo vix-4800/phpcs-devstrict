@@ -8,10 +8,10 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Disallows direct assignment to Yii::$app->response->format.
+ * Disallows direct assignment to Yii::$app->response->format for JSON and XML formats.
  *
- * In Yii2 controllers, it's better to use methods like $this->asJson()
- * which automatically set the response format.
+ * In Yii2 controllers, use $this->asJson() or $this->asXml() instead of
+ * manually setting response format.
  */
 class DisallowResponseFormatAssignmentSniff implements Sniff
 {
@@ -103,8 +103,59 @@ class DisallowResponseFormatAssignmentSniff implements Sniff
             return;
         }
 
-        $error = 'Direct assignment to Yii::$app->response->format is discouraged;
-            use controller methods like $this->asJson() instead';
+        $valueToken = $phpcsFile->findNext(T_WHITESPACE, $next + 1, null, true);
+        if ($valueToken === false) {
+            return;
+        }
+
+        $isJsonOrXml = false;
+        $formatType = null;
+
+        if (in_array($tokens[$valueToken]['code'], [T_CONSTANT_ENCAPSED_STRING, T_DOUBLE_QUOTED_STRING], true)) {
+            $value = trim($tokens[$valueToken]['content'], '"\'');
+            if (in_array(strtolower($value), ['json', 'xml'], true)) {
+                $isJsonOrXml = true;
+                $formatType = strtolower($value);
+            }
+        }
+
+        if ($tokens[$valueToken]['code'] === T_STRING) {
+            $potentialClass = $valueToken;
+            $doubleColon = $phpcsFile->findNext(T_WHITESPACE, $potentialClass + 1, null, true);
+
+            if ($doubleColon !== false && $tokens[$doubleColon]['code'] === T_DOUBLE_COLON) {
+                $constantToken = $phpcsFile->findNext(T_WHITESPACE, $doubleColon + 1, null, true);
+                if ($constantToken !== false && $tokens[$constantToken]['code'] === T_STRING) {
+                    $constantName = $tokens[$constantToken]['content'];
+                    if ($constantName === 'FORMAT_JSON') {
+                        $isJsonOrXml = true;
+                        $formatType = 'json';
+                    } elseif ($constantName === 'FORMAT_XML') {
+                        $isJsonOrXml = true;
+                        $formatType = 'xml';
+                    }
+                }
+            } else {
+            $constantName = $tokens[$valueToken]['content'];
+            if ($constantName === 'FORMAT_JSON') {
+                $isJsonOrXml = true;
+                $formatType = 'json';
+            } elseif ($constantName === 'FORMAT_XML') {
+                $isJsonOrXml = true;
+                $formatType = 'xml';
+                }
+            }
+        }
+
+        if (!$isJsonOrXml) {
+            return;
+        }
+
+        $methodName = $formatType === 'json' ? 'asJson()' : 'asXml()';
+        $error = sprintf(
+            'Direct assignment to Yii::$app->response->format is discouraged; use $this->%s instead',
+            $methodName
+        );
         $phpcsFile->addWarning($error, $stackPtr, 'Found');
     }
 }

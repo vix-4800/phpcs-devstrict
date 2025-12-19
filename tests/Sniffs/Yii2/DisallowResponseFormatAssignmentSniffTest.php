@@ -16,7 +16,7 @@ use DevStrict\Tests\BaseTest;
 class DisallowResponseFormatAssignmentSniffTest extends BaseTest
 {
     /**
-     * Test that direct assignment to Yii::$app->response->format triggers a warning.
+     * Test that direct assignment to Yii::$app->response->format with JSON format triggers a warning.
      */
     public function testResponseFormatAssignmentTriggersWarning(): void
     {
@@ -36,7 +36,7 @@ class TestController
     }
 
     /**
-     * Test that direct assignment with different constant triggers a warning.
+     * Test that direct assignment with XML constant triggers a warning.
      */
     public function testResponseFormatWithDifferentConstantTriggersWarning(): void
     {
@@ -160,5 +160,37 @@ class TestController
         // Should contain warnings for both assignments
         $warningCount = substr_count($result, 'Yii::$app->response->format');
         $this->assertGreaterThanOrEqual(2, $warningCount);
+    }
+
+    /**
+     * Test that other formats (non-JSON/XML) do not trigger warning.
+     */
+    public function testOtherFormatsDoNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+use yii\web\Response;
+
+class TestController
+{
+    public function actionRaw()
+    {
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        return "plain text";
+    }
+
+    public function actionHtml()
+    {
+        Yii::$app->response->format = Response::FORMAT_HTML;
+        return "<html></html>";
+    }
+
+    public function actionCustom()
+    {
+        Yii::$app->response->format = "custom";
+        return $data;
+    }
+}', 'DevStrict.Yii2.DisallowResponseFormatAssignment');
+
+        $this->assertNoViolations($result);
     }
 }
