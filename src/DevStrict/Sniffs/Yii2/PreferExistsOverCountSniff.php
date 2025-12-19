@@ -8,10 +8,12 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Suggests using exists() instead of count() > 0 for ActiveQuery existence checks.
+ * Suggests using exists() instead of count() > 0 or ->one() for ActiveQuery existence checks.
  *
  * The exists() method is more efficient than count() when you only need to check
  * if any records exist, as it stops after finding the first match instead of counting all records.
+ * Similarly, using ->one() in conditional expressions loads the entire record when you only
+ * need to know if it exists.
  *
  * Examples:
  * - ->count() > 0 should be ->exists()
@@ -19,6 +21,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
  * - ->count() !== 0 should be ->exists()
  * - ->count() == 0 should be !->exists()
  * - ->count() < 1 should be !->exists()
+ * - if (Model::find()->where(...)->one()) should be if (Model::find()->where(...)->exists())
  */
 class PreferExistsOverCountSniff implements Sniff
 {
@@ -40,9 +43,19 @@ class PreferExistsOverCountSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
         $token = $tokens[$stackPtr];
 
-        if ($token['content'] !== 'count') {
-            return;
+        if ($token['content'] === 'count') {
+            $this->processCount($phpcsFile, $stackPtr);
+        } elseif ($token['content'] === 'one') {
+            $this->processOne($phpcsFile, $stackPtr);
         }
+    }
+
+    /**
+     * Process count() method calls.
+     */
+    private function processCount(File $phpcsFile, int $stackPtr): void
+    {
+        $tokens = $phpcsFile->getTokens();
 
         $prevToken = $phpcsFile->findPrevious(T_WHITESPACE, $stackPtr - 1, null, true);
 
@@ -80,6 +93,88 @@ class PreferExistsOverCountSniff implements Sniff
         }
 
         $this->reportViolation($phpcsFile, $stackPtr, $comparison);
+    }
+
+    /**
+     * Process one() method calls in conditional contexts.
+     */
+    private function processOne(File $phpcsFile, int $stackPtr): void
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        $prevToken = $phpcsFile->findPrevious(T_WHITESPACE, $stackPtr - 1, null, true);
+        if ($prevToken === false || $tokens[$prevToken]['code'] !== T_OBJECT_OPERATOR) {
+            return;
+        }
+
+        $nextToken = $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
+        if ($nextToken === false || $tokens[$nextToken]['code'] !== T_OPEN_PARENTHESIS) {
+            return;
+        }
+
+        if (!isset($tokens[$nextToken]['parenthesis_closer'])) {
+            return;
+        }
+
+        $closeParen = $tokens[$nextToken]['parenthesis_closer'];
+
+        $hasArguments = $this->hasArgumentsBetween($phpcsFile, $nextToken, $closeParen);
+        if ($hasArguments) {
+            return;
+        }
+
+        if (!$this->isInConditionalContext($phpcsFile, $stackPtr)) {
+            return;
+        }
+
+        $phpcsFile->addWarning(
+            'Use ->exists() instead of ->one() when checking for record existence',
+            $stackPtr,
+            'PreferExistsOverOne'
+        );
+    }
+
+    /**
+     * Check if the method call is used in a conditional context (if, while, etc.).
+     */
+    private function isInConditionalContext(File $phpcsFile, int $stackPtr): bool
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        for ($i = $stackPtr; $i >= 0; --$i) {
+            $token = $tokens[$i];
+
+            if (in_array($token['code'], [T_IF, T_ELSEIF, T_WHILE, T_DO], true)) {
+                $openParen = $phpcsFile->findNext(T_OPEN_PARENTHESIS, $i, $stackPtr);
+                if ($openParen !== false && isset($tokens[$openParen]['parenthesis_closer'])) {
+                    $closeParen = $tokens[$openParen]['parenthesis_closer'];
+                    if ($stackPtr > $openParen && $stackPtr < $closeParen) {
+                        return true;
+                    }
+                }
+            }
+
+            if (in_array($token['code'], [T_BOOLEAN_AND, T_BOOLEAN_OR, T_LOGICAL_AND, T_LOGICAL_OR], true)) {
+                return true;
+            }
+
+            if (in_array($token['code'], [T_SEMICOLON, T_OPEN_CURLY_BRACKET, T_CLOSE_CURLY_BRACKET], true)) {
+                break;
+            }
+        }
+
+        $nextToken = $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
+        if ($nextToken !== false) {
+            if ($tokens[$nextToken]['code'] === T_OPEN_PARENTHESIS && isset($tokens[$nextToken]['parenthesis_closer'])) {
+                $nextToken = $phpcsFile->findNext(T_WHITESPACE, $tokens[$nextToken]['parenthesis_closer'] + 1, null, true);
+            }
+
+            if ($nextToken !== false && $tokens[$nextToken]['code'] === T_INLINE_THEN) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -621,9 +621,10 @@ class UserController extends Controller
 
 **Type:** Warning
 
-**Description:** Suggests using `exists()` instead of `count() > 0` and similar patterns for ActiveQuery existence
-checks. The `exists()` method is more efficient than `count()` when you only need to check if any records exist, as it
-stops after finding the first match instead of counting all records.
+**Description:** Suggests using `exists()` instead of `count() > 0` and `->one()` for ActiveQuery existence checks. The
+`exists()` method is more efficient than `count()` when you only need to check if any records exist, as it stops after
+finding the first match. Similarly, using `->one()` in conditional expressions loads the entire record when you only
+need to know if it exists.
 
 **Bad:**
 
@@ -642,6 +643,10 @@ class UserController extends Controller
 
         if ($query->count() == 0) {
             return 'No records';
+        }
+
+        if (TimeTracker::find()->where(['datetime_end' => null])->one()) {
+            return 'Has active tracker';
         }
 
         $hasRecords = Post::find()->where(['published' => true])->count() !== 0;
@@ -666,6 +671,10 @@ class UserController extends Controller
 
         if (!$query->exists()) {
             return 'No records';
+        }
+
+        if (TimeTracker::find()->where(['datetime_end' => null])->exists()) {
+            return 'Has active tracker';
         }
 
         $hasRecords = Post::find()->where(['published' => true])->exists();

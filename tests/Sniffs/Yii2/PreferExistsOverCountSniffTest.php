@@ -284,4 +284,71 @@ if ($query->count() > 0) {
         $this->assertContainsWarning($result, '!...->exists()');
         $this->assertContainsWarning($result, '...->exists()');
     }
+
+    /**
+     * Test that ->one() in if condition triggers a warning.
+     */
+    public function testOneInIfConditionTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if (TimeTracker::find()->where(["datetime_end" => null, "user_id" => $user->id])->one()) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use ->exists() instead of ->one()');
+    }
+
+    /**
+     * Test that ->one() in while condition triggers a warning.
+     */
+    public function testOneInWhileConditionTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+while ($query->one()) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use ->exists() instead of ->one()');
+    }
+
+    /**
+     * Test that ->one() in ternary condition triggers a warning.
+     */
+    public function testOneInTernaryTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+$result = $query->one() ? "found" : "not found";', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use ->exists() instead of ->one()');
+    }
+
+    /**
+     * Test that ->one() in logical AND triggers a warning.
+     */
+    public function testOneInLogicalAndTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+if ($condition && $query->one()) {
+    // do something
+}', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertContainsWarning($result, 'Use ->exists() instead of ->one()');
+    }
+
+    /**
+     * Test that ->one() used for assignment does not trigger warning.
+     */
+    public function testOneForAssignmentDoesNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+$user = User::find()->where(["id" => 1])->one();
+return $query->one();', 'DevStrict.Yii2.PreferExistsOverCount');
+
+        $this->assertNoViolations($result);
+    }
 }
