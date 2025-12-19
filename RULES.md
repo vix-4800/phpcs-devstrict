@@ -26,6 +26,7 @@ This document describes the custom coding standard rules implemented in the DevS
     - [DevStrict.Yii2.DisallowResponseFormatAssignment](#devstrictyii2disallowresponseformatassignment)
     - [DevStrict.Yii2.PreferActiveRecordShortcuts](#devstrictyii2preferactiverecordshortcuts)
     - [DevStrict.Yii2.PreferExistsOverCount](#devstrictyii2preferexistsovercount)
+    - [DevStrict.Yii2.PreferIdentityOverFindOne](#devstrictyii2preferidentityoverfindone)
     - [DevStrict.Yii2.PreferIsGuestOverUserIdCheck](#devstrictyii2preferisguestoveruseridcheck)
   - [Attributes](#attributes)
     - [DevStrict.Attributes.ForbiddenAttributes](#devstrictattributesforbiddenattributes)
@@ -668,6 +669,71 @@ class UserController extends Controller
         }
 
         $hasRecords = Post::find()->where(['published' => true])->exists();
+    }
+}
+```
+
+---
+
+### DevStrict.Yii2.PreferIdentityOverFindOne
+
+**Type:** Warning
+
+**Description:** Detects patterns where the current user is fetched from the database using their ID. Use
+`Yii::$app->user->identity` instead, which returns the already loaded user model without additional database queries.
+
+**Bad:**
+
+```php
+class ProfileController extends Controller
+{
+    public function actionView()
+    {
+        $user = User::findOne(Yii::$app->user->id);
+        return $this->render('view', ['user' => $user]);
+    }
+
+    public function actionUpdate()
+    {
+        $model = User::findOne(['id' => Yii::$app->user->id]);
+        // ...
+    }
+
+    public function actionSettings()
+    {
+        $user = User::find()->where(['id' => Yii::$app->user->id])->one();
+        // ...
+    }
+
+    public function actionEdit()
+    {
+        $user = User::findOne(Yii::$app->user->getId());
+        // ...
+    }
+}
+```
+
+**Good:**
+
+```php
+class ProfileController extends Controller
+{
+    public function actionView()
+    {
+        $user = Yii::$app->user->identity;
+        return $this->render('view', ['user' => $user]);
+    }
+
+    public function actionUpdate()
+    {
+        $model = Yii::$app->user->identity;
+        // ...
+    }
+
+    public function actionSettings()
+    {
+        $user = Yii::$app->user->identity;
+        // ...
     }
 }
 ```

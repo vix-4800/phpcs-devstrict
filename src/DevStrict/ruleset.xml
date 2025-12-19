@@ -43,6 +43,10 @@
         <type>warning</type>
     </rule>
 
+    <rule ref="DevStrict.Yii2.PreferIdentityOverFindOne">
+        <type>warning</type>
+    </rule>
+
     <rule ref="DevStrict.Objects.DisallowVariableStaticProperty">
         <type>warning</type>
     </rule>
