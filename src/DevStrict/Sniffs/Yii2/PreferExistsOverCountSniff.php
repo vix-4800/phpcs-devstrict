@@ -73,7 +73,6 @@ class PreferExistsOverCountSniff implements Sniff
             return;
         }
 
-        $comparisonToken = $tokens[$comparisonStart];
         $comparison = $this->getComparison($phpcsFile, $comparisonStart);
 
         if ($comparison === null) {
