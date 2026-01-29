@@ -20,6 +20,7 @@ This document describes the custom coding standard rules implemented in the DevS
     - [DevStrict.Formatting.MethodChainingPerLine](#devstrictformattingmethodchainingperline)
     - [DevStrict.Formatting.ConsistentStatementIndentation](#devstrictformattingconsistentstatementindentation)
     - [DevStrict.Formatting.DisallowConsecutivePhpTags](#devstrictformattingdisallowconsecutivephptags)
+    - [DevStrict.Formatting.DisallowMultipleThrowsPerLine](#devstrictformattingdisallowmultiplethrowsperline)
   - [Objects](#objects)
     - [DevStrict.Objects.DisallowVariableStaticProperty](#devstrictobjectsdisallowvariablestaticproperty)
   - [Yii2](#yii2)
@@ -447,6 +448,45 @@ if ($conditionB) {
     echo $outputB;
 }
 ?>
+```
+
+---
+
+### DevStrict.Formatting.DisallowMultipleThrowsPerLine
+
+**Type:** Warning
+
+**Description:** Disallows multiple exception types in a single `@throws` annotation separated by pipe characters.
+Each exception type should have its own separate `@throws` annotation for better documentation clarity and
+readability.
+
+**Bad:**
+
+```php
+/**
+ * @throws JsonException|Exception
+ * @throws InvalidArgumentException|RuntimeException|LogicException
+ */
+function processData($data): void
+{
+    // implementation
+}
+```
+
+**Good:**
+
+```php
+/**
+ * @throws JsonException
+ * @throws Exception
+ * @throws InvalidArgumentException
+ * @throws RuntimeException
+ * @throws LogicException
+ */
+function processData($data): void
+{
+    // implementation
+}
 ```
 
 ---

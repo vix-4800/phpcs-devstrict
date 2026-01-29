@@ -72,4 +72,8 @@
     <rule ref="DevStrict.Functions.PreferJsonValidate">
         <type>warning</type>
     </rule>
+
+    <rule ref="DevStrict.Formatting.DisallowMultipleThrowsPerLine">
+        <type>warning</type>
+    </rule>
 </ruleset>

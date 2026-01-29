@@ -1,0 +1,69 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DevStrict\Sniffs\Formatting;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
+
+/**
+ * Disallows multiple exception types in a single @throws annotation.
+ *
+ * Bad:
+ *   @throws JsonException|Exception
+ *
+ * Good:
+ *   @throws JsonException
+ *   @throws Exception
+ */
+class DisallowMultipleThrowsPerLineSniff implements Sniff
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function register(): array
+    {
+        return [T_DOC_COMMENT_TAG];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function process(File $phpcsFile, $stackPtr): void
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        if ($tokens[$stackPtr]['content'] !== '@throws') {
+            return;
+        }
+
+        $nextToken = $phpcsFile->findNext(
+            [T_DOC_COMMENT_WHITESPACE],
+            $stackPtr + 1,
+            null,
+            true,
+        );
+
+        if ($nextToken === false) {
+            return;
+        }
+
+        if ($tokens[$nextToken]['code'] !== T_DOC_COMMENT_STRING) {
+            return;
+        }
+
+        $exceptionTypes = $tokens[$nextToken]['content'];
+
+        if (str_contains($exceptionTypes, '|')) {
+            $types = array_map('trim', explode('|', $exceptionTypes));
+            $types = array_filter($types);
+
+            if (count($types) > 1) {
+                $error = 'Each @throws annotation must contain only one exception type. Found: %s. Use separate @throws for each exception.';
+                $data = [implode(', ', $types)];
+                $phpcsFile->addWarning($error, $stackPtr, 'MultipleExceptions', $data);
+            }
+        }
+    }
+}
