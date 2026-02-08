@@ -50,10 +50,19 @@ trait MethodChainHelperTrait
      */
     private function findPreviousMultiLineOperator(File $phpcsFile, int $stackPtr): ?int
     {
+        $currentNestLevel = $this->getParenthesisNestLevel($phpcsFile, $stackPtr);
         $searchPtr = $stackPtr - 1;
 
         while (($prev = $phpcsFile->findPrevious([T_OBJECT_OPERATOR, T_NULLSAFE_OBJECT_OPERATOR], $searchPtr, null, false)) !== false) {
             if (!$this->isMultiLineOperator($phpcsFile, $prev)) {
+                $searchPtr = $prev - 1;
+
+                continue;
+            }
+
+            $prevNestLevel = $this->getParenthesisNestLevel($phpcsFile, $prev);
+
+            if ($prevNestLevel !== $currentNestLevel) {
                 $searchPtr = $prev - 1;
 
                 continue;
@@ -151,5 +160,20 @@ trait MethodChainHelperTrait
             || isset(Tokens::COMPARISON_TOKENS[$code])
             || isset(Tokens::OPERATORS[$code])
             || isset(Tokens::BOOLEAN_OPERATORS[$code]);
+    }
+
+    /**
+     * Calculates the parenthesis nesting level for a given token position.
+     * This helps distinguish between chains at different nesting depths.
+     */
+    private function getParenthesisNestLevel(File $phpcsFile, int $stackPtr): int
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        if (!isset($tokens[$stackPtr]['nested_parenthesis'])) {
+            return 0;
+        }
+
+        return count($tokens[$stackPtr]['nested_parenthesis']);
     }
 }
