@@ -55,7 +55,7 @@ class MethodChainingPerLineSniff implements Sniff
                 continue;
             }
 
-            if (!$this->isSameChainContext($phpcsFile, $tokens, $stackPtr, $ptr)) {
+            if (!$this->isSameChainContext($tokens, $stackPtr, $ptr)) {
                 continue;
             }
 
@@ -86,7 +86,7 @@ class MethodChainingPerLineSniff implements Sniff
                 break;
             }
 
-            if (!$this->isSameChainContext($phpcsFile, $tokens, $stackPtr, $prev)) {
+            if (!$this->isSameChainContext($tokens, $stackPtr, $prev)) {
                 break;
             }
 
@@ -126,7 +126,7 @@ class MethodChainingPerLineSniff implements Sniff
                 return true;
             }
 
-            return !$this->isSameChainContext($phpcsFile, $tokens, $operatorPtr, $prev);
+            return !$this->isSameChainContext($tokens, $operatorPtr, $prev);
         }
 
         return true;
@@ -135,74 +135,23 @@ class MethodChainingPerLineSniff implements Sniff
     /**
      * Checks whether two operators share the same chain context (scope and parenthesis nesting).
      */
-    private function isSameChainContext(File $phpcsFile, array $tokens, int $firstPtr, int $secondPtr): bool
+    private function isSameChainContext(array $tokens, int $firstPtr, int $secondPtr): bool
     {
         return $tokens[$firstPtr]['level'] === $tokens[$secondPtr]['level']
-            && $this->buildContextKey($phpcsFile, $tokens, $firstPtr) === $this->buildContextKey($phpcsFile, $tokens, $secondPtr);
+            && $this->buildContextKey($tokens[$firstPtr]) === $this->buildContextKey($tokens[$secondPtr]);
     }
 
     /**
      * Creates a comparable context key from nested parenthesis and conditions info.
      */
-    private function buildContextKey(File $phpcsFile, array $tokens, int $stackPtr): string
+    private function buildContextKey(array $token): string
     {
-        $token = $tokens[$stackPtr];
         $conditions = $token['conditions'] ?? [];
         $nested = $token['nested_parenthesis'] ?? [];
-        $bracketContext = $this->buildBracketContextKey($phpcsFile, $tokens, $stackPtr);
 
         $conditionPart = $conditions === [] ? '' : implode(',', array_keys($conditions));
         $nestedPart = $nested === [] ? '' : implode(',', array_keys($nested));
 
-        return $conditionPart . '|' . $nestedPart . '|' . $bracketContext;
-    }
-
-    /**
-     * Builds a context key representing nested array and bracket access levels.
-     */
-    private function buildBracketContextKey(File $phpcsFile, array $tokens, int $stackPtr): string
-    {
-        $openers = array_merge(
-            $this->collectBracketOpeners($phpcsFile, $tokens, $stackPtr, T_OPEN_SHORT_ARRAY, 'bracket_closer'),
-            $this->collectBracketOpeners($phpcsFile, $tokens, $stackPtr, T_OPEN_SQUARE_BRACKET, 'bracket_closer'),
-            $this->collectBracketOpeners($phpcsFile, $tokens, $stackPtr, T_ARRAY, 'parenthesis_closer'),
-        );
-
-        if ($openers === []) {
-            return '';
-        }
-
-        sort($openers);
-        $openers = array_unique($openers);
-
-        return implode(',', $openers);
-    }
-
-    /**
-     * Collects bracket or array openers that enclose the provided pointer.
-     *
-     * @return array<int>
-     */
-    private function collectBracketOpeners(
-        File $phpcsFile,
-        array $tokens,
-        int $stackPtr,
-        int|string $openerCode,
-        string $closerKey,
-    ): array {
-        $openers = [];
-        $searchPtr = $stackPtr;
-
-        while (($opener = $phpcsFile->findPrevious($openerCode, $searchPtr - 1, null, false)) !== false) {
-            $closer = $tokens[$opener][$closerKey] ?? null;
-
-            if ($closer !== null && $closer > $stackPtr) {
-                $openers[] = $opener;
-            }
-
-            $searchPtr = $opener - 1;
-        }
-
-        return $openers;
+        return $conditionPart . '|' . $nestedPart;
     }
 }

@@ -76,22 +76,4 @@ $names = User::find()
 
         $this->assertNoViolations($result);
     }
-
-    public function testNestedChainInsideArrayArgumentIsIgnored(): void
-    {
-        $result = $this->runPhpcs('<?php
-
-Photo::find()
-    ->where([
-        "created_user_by" => User::find()
-            ->select("id")
-            ->where(["like", "username", "admin%"])
-            ->column()
-    ])
-    ->orderBy(["id" => SORT_DESC])
-    ->all();
-', 'DevStrict.Formatting.MethodChainingPerLine');
-
-        $this->assertNoViolations($result);
-    }
 }
