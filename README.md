@@ -67,8 +67,6 @@ The main ruleset includes all available rules. See [RULES.md](RULES.md) for deta
     chained call per line once the chain is broken
 - [`DevStrict.Formatting.ConsistentStatementIndentation`](RULES.md#devstrictformattingconsistentstatementindentation) -
     Keep statements at the same nesting level aligned with identical indentation
-- [`DevStrict.Formatting.DisallowConsecutivePhpTags`](RULES.md#devstrictformattingdisallowconsecutivephptags) -
-    Warn when `?>...<?php` switches appear repeatedly in view files
 - [`DevStrict.Formatting.DisallowMultipleThrowsPerLine`](RULES.md#devstrictformattingdisallowmultiplethrowsperline) -
     Require separate `@throws` annotations for each exception type
 - [`DevStrict.Functions.DisallowCastFunctions`](RULES.md#devstrictfunctionsdisallowcastfunctions) - Use type casts
