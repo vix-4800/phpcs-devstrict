@@ -10,12 +10,12 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 /**
  * Suggests using json_validate() instead of json_decode() for validation purposes.
  */
-class PreferJsonValidateSniff implements Sniff
+final class PreferJsonValidateSniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array<int|string>
+     * @return list<int|string>
      */
     public function register(): array
     {
@@ -24,6 +24,9 @@ class PreferJsonValidateSniff implements Sniff
 
     /**
      * Processes this test when one of its tokens is encountered.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     public function process(File $phpcsFile, int $stackPtr): void
     {
@@ -52,6 +55,7 @@ class PreferJsonValidateSniff implements Sniff
 
         if ($functionName === 'json_last_error') {
             $this->addJsonValidateWarning($phpcsFile, $stackPtr);
+
             return;
         }
 
@@ -62,6 +66,9 @@ class PreferJsonValidateSniff implements Sniff
 
     /**
      * Checks if json_decode call has JSON_THROW_ON_ERROR flag.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function hasJsonThrowOnErrorFlag(File $phpcsFile, int $stackPtr): bool
     {
@@ -86,6 +93,9 @@ class PreferJsonValidateSniff implements Sniff
 
     /**
      * Checks if json_decode is used only for validation (result is not used).
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function isUsedOnlyForValidation(File $phpcsFile, int $stackPtr): bool
     {
@@ -108,10 +118,12 @@ class PreferJsonValidateSniff implements Sniff
         if ($tokens[$nextToken]['code'] === T_SEMICOLON) {
             $searchEnd = $nextToken + 20;
             $foundJsonLastError = false;
+            $tokensCount = count($tokens);
 
-            for ($i = $nextToken + 1; $i < $searchEnd && $i < count($tokens); $i++) {
+            for ($i = $nextToken + 1; $i < $searchEnd && $i < $tokensCount; $i++) {
                 if ($tokens[$i]['code'] === T_STRING && mb_strtolower($tokens[$i]['content']) === 'json_last_error') {
                     $foundJsonLastError = true;
+
                     break;
                 }
             }
@@ -124,6 +136,9 @@ class PreferJsonValidateSniff implements Sniff
 
     /**
      * Adds warning about using json_validate().
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function addJsonValidateWarning(File $phpcsFile, int $stackPtr): void
     {

@@ -12,12 +12,12 @@ use PHP_CodeSniffer\Sniffs\Sniff;
  *
  * Using Yii::$app->user->identity is more efficient than querying the database.
  */
-class PreferIdentityOverFindOneSniff implements Sniff
+final class PreferIdentityOverFindOneSniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array<int|string>
+     * @return list<int|string>
      */
     public function register(): array
     {
@@ -26,6 +26,9 @@ class PreferIdentityOverFindOneSniff implements Sniff
 
     /**
      * Processes this test when one of its tokens is encountered.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     public function process(File $phpcsFile, int $stackPtr): void
     {
@@ -33,11 +36,13 @@ class PreferIdentityOverFindOneSniff implements Sniff
         $token = $tokens[$stackPtr];
 
         $next = $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
+
         if ($next === false || $tokens[$next]['code'] !== T_DOUBLE_COLON) {
             return;
         }
 
         $methodToken = $phpcsFile->findNext(T_WHITESPACE, $next + 1, null, true);
+
         if ($methodToken === false || $tokens[$methodToken]['code'] !== T_STRING) {
             return;
         }
@@ -55,12 +60,17 @@ class PreferIdentityOverFindOneSniff implements Sniff
 
     /**
      * Process Model::findOne(...) pattern.
+     *
+     * @param File $phpcsFile
+     * @param int  $classPtr
+     * @param int  $methodPtr
      */
     private function processFindOne(File $phpcsFile, int $classPtr, int $methodPtr): void
     {
         $tokens = $phpcsFile->getTokens();
 
         $openParen = $phpcsFile->findNext(T_WHITESPACE, $methodPtr + 1, null, true);
+
         if ($openParen === false || $tokens[$openParen]['code'] !== T_OPEN_PARENTHESIS) {
             return;
         }
@@ -86,6 +96,10 @@ class PreferIdentityOverFindOneSniff implements Sniff
 
     /**
      * Process Model::find()->where()->one() pattern.
+     *
+     * @param File $phpcsFile
+     * @param int  $classPtr
+     * @param int  $methodPtr
      */
     private function processFindWhere(File $phpcsFile, int $classPtr, int $methodPtr): void
     {
@@ -94,6 +108,7 @@ class PreferIdentityOverFindOneSniff implements Sniff
         $current = $methodPtr;
 
         $openParen = $phpcsFile->findNext(T_WHITESPACE, $current + 1, null, true);
+
         if ($openParen === false || $tokens[$openParen]['code'] !== T_OPEN_PARENTHESIS) {
             return;
         }
@@ -105,16 +120,19 @@ class PreferIdentityOverFindOneSniff implements Sniff
         $current = $tokens[$openParen]['parenthesis_closer'];
 
         $arrow = $phpcsFile->findNext(T_WHITESPACE, $current + 1, null, true);
+
         if ($arrow === false || $tokens[$arrow]['code'] !== T_OBJECT_OPERATOR) {
             return;
         }
 
         $whereToken = $phpcsFile->findNext(T_WHITESPACE, $arrow + 1, null, true);
+
         if ($whereToken === false || $tokens[$whereToken]['code'] !== T_STRING || $tokens[$whereToken]['content'] !== 'where') {
             return;
         }
 
         $whereOpenParen = $phpcsFile->findNext(T_WHITESPACE, $whereToken + 1, null, true);
+
         if ($whereOpenParen === false || $tokens[$whereOpenParen]['code'] !== T_OPEN_PARENTHESIS) {
             return;
         }
@@ -131,21 +149,25 @@ class PreferIdentityOverFindOneSniff implements Sniff
 
             while (true) {
                 $nextArrow = $phpcsFile->findNext(T_WHITESPACE, $current + 1, null, true);
+
                 if ($nextArrow === false || $tokens[$nextArrow]['code'] !== T_OBJECT_OPERATOR) {
                     break;
                 }
 
                 $nextMethod = $phpcsFile->findNext(T_WHITESPACE, $nextArrow + 1, null, true);
+
                 if ($nextMethod === false || $tokens[$nextMethod]['code'] !== T_STRING) {
                     break;
                 }
 
                 if ($tokens[$nextMethod]['content'] === 'one') {
                     $hasOne = true;
+
                     break;
                 }
 
                 $nextOpenParen = $phpcsFile->findNext(T_WHITESPACE, $nextMethod + 1, null, true);
+
                 if ($nextOpenParen === false || $tokens[$nextOpenParen]['code'] !== T_OPEN_PARENTHESIS) {
                     break;
                 }
@@ -173,6 +195,10 @@ class PreferIdentityOverFindOneSniff implements Sniff
 
     /**
      * Check if content contains patterns for getting current user ID.
+     *
+     * @param File $phpcsFile
+     * @param int  $start
+     * @param int  $end
      */
     private function containsYiiUserId(File $phpcsFile, int $start, int $end): bool
     {
@@ -193,6 +219,10 @@ class PreferIdentityOverFindOneSniff implements Sniff
 
     /**
      * Check if content contains ['id' => Yii::$app->user->id] pattern.
+     *
+     * @param File $phpcsFile
+     * @param int  $start
+     * @param int  $end
      */
     private function containsIdYiiUserId(File $phpcsFile, int $start, int $end): bool
     {
@@ -200,9 +230,11 @@ class PreferIdentityOverFindOneSniff implements Sniff
 
         for ($i = $start; $i < $end; ++$i) {
             if (in_array($tokens[$i]['code'], [T_CONSTANT_ENCAPSED_STRING, T_DOUBLE_QUOTED_STRING], true)) {
-                $value = trim($tokens[$i]['content'], '"\'');
+                $value = mb_trim($tokens[$i]['content'], '"\'');
+
                 if ($value === 'id') {
                     $arrow = $phpcsFile->findNext(T_WHITESPACE, $i + 1, $end, true);
+
                     if ($arrow !== false && $tokens[$arrow]['code'] === T_DOUBLE_ARROW) {
                         if ($this->containsYiiUserId($phpcsFile, $arrow + 1, $end)) {
                             return true;

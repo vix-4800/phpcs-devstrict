@@ -22,12 +22,12 @@ use PHP_CodeSniffer\Sniffs\Sniff;
  * str_starts_with($haystack, $needle)
  * str_ends_with($haystack, $needle)
  */
-class PreferModernStringFunctionsSniff implements Sniff
+final class PreferModernStringFunctionsSniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array<int|string>
+     * @return list<int|string>
      */
     public function register(): array
     {
@@ -36,6 +36,9 @@ class PreferModernStringFunctionsSniff implements Sniff
 
     /**
      * Processes this test when one of its tokens is encountered.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     public function process(File $phpcsFile, int $stackPtr): void
     {
@@ -92,6 +95,10 @@ class PreferModernStringFunctionsSniff implements Sniff
 
     /**
      * Determines which modern function to suggest based on the comparison.
+     *
+     * @param File   $phpcsFile
+     * @param int    $comparisonPtr
+     * @param string $originalFunction
      */
     private function getModernFunctionSuggestion(File $phpcsFile, int $comparisonPtr, string $originalFunction): ?string
     {

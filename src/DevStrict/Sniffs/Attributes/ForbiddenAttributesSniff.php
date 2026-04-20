@@ -7,17 +7,17 @@ namespace DevStrict\Sniffs\Attributes;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
-class ForbiddenAttributesSniff implements Sniff
+final class ForbiddenAttributesSniff implements Sniff
 {
     /**
      * List of forbidden attributes.
      *
-     * @var array<string>
+     * @var list<string>
      */
     public array $forbiddenAttributes = [];
 
     /**
-     * @return array<int|string>
+     * @return list<int|string>
      */
     public function register(): array
     {
@@ -26,8 +26,6 @@ class ForbiddenAttributesSniff implements Sniff
 
     public function process(File $phpcsFile, int $stackPtr): void
     {
-        $tokens = $phpcsFile->getTokens();
-
         // T_ATTRIBUTE is the `#[` token.
         // We need to find the attribute name which follows.
         $attributeNameStart = $phpcsFile->findNext([T_WHITESPACE, T_COMMENT], $stackPtr + 1, null, true);
@@ -54,7 +52,7 @@ class ForbiddenAttributesSniff implements Sniff
         // Check if the attribute is in the forbidden list.
         // We check both the exact match and the name without the leading backslash.
         foreach ($this->forbiddenAttributes as $forbidden) {
-            if ($name === $forbidden || ltrim($name, '\\') === $forbidden) {
+            if ($name === $forbidden || mb_ltrim($name, '\\') === $forbidden) {
                 $phpcsFile->addWarning(
                     'Usage of attribute "%s" is forbidden.',
                     $attributeNameStart,

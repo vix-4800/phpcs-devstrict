@@ -25,7 +25,7 @@ use ValueError;
  * (float) $var
  * (bool) $var
  */
-class DisallowCastFunctionsSniff implements Sniff
+final class DisallowCastFunctionsSniff implements Sniff
 {
     /**
      * Map of disallowed functions to their cast equivalents.
@@ -42,7 +42,7 @@ class DisallowCastFunctionsSniff implements Sniff
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array<int|string>
+     * @return list<int|string>
      */
     public function register(): array
     {
@@ -51,6 +51,9 @@ class DisallowCastFunctionsSniff implements Sniff
 
     /**
      * Processes this test when one of its tokens is encountered.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      *
      * @throws ValueError
      */

@@ -11,7 +11,7 @@ use PHP_CodeSniffer\Util\Tokens;
 /**
  * Ensures chained method calls are indented consistently when split across multiple lines.
  */
-class MethodChainingIndentationSniff implements Sniff
+final class MethodChainingIndentationSniff implements Sniff
 {
     use MethodChainHelperTrait;
 
@@ -47,6 +47,10 @@ class MethodChainingIndentationSniff implements Sniff
 
     /**
      * Ensures the current operator lines up with the previous chain line.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
+     * @param int  $previousPtr
      */
     private function assertIndentMatchesPreviousChain(File $phpcsFile, int $stackPtr, int $previousPtr): void
     {
@@ -69,6 +73,9 @@ class MethodChainingIndentationSniff implements Sniff
 
     /**
      * Ensures the first multi-line chained call is indented relative to the anchor line.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function assertIndentRelativeToAnchor(File $phpcsFile, int $stackPtr): void
     {
@@ -98,6 +105,9 @@ class MethodChainingIndentationSniff implements Sniff
 
     /**
      * Locates the indentation info for the line that anchors the method chain.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      *
      * @return array{indent:int}|null
      */
@@ -147,6 +157,9 @@ class MethodChainingIndentationSniff implements Sniff
 
     /**
      * Finds the pointer representing the first token on the given line.
+     *
+     * @param array<int, array<string, mixed>> $tokens
+     * @param int                              $ptr
      */
     private function findLineStartPtr(array $tokens, int $ptr): int
     {
@@ -162,6 +175,10 @@ class MethodChainingIndentationSniff implements Sniff
 
     /**
      * Finds the first non-whitespace token on a line between the provided bounds.
+     *
+     * @param array<int, array<string, mixed>> $tokens
+     * @param int                              $startPtr
+     * @param int                              $endPtr
      */
     private function findFirstCodeOnLine(array $tokens, int $startPtr, int $endPtr): ?int
     {

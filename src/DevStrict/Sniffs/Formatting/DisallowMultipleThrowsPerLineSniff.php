@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DevStrict\Sniffs\Formatting;
 
+use Exception;
+use JsonException;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
@@ -11,13 +13,14 @@ use PHP_CodeSniffer\Sniffs\Sniff;
  * Disallows multiple exception types in a single @throws annotation.
  *
  * Bad:
- *   @throws JsonException|Exception
+ *
+ * @throws Exception|JsonException
  *
  * Good:
- *   @throws JsonException
- *   @throws Exception
+ * @throws JsonException
+ * @throws Exception
  */
-class DisallowMultipleThrowsPerLineSniff implements Sniff
+final class DisallowMultipleThrowsPerLineSniff implements Sniff
 {
     /**
      * {@inheritDoc}
@@ -57,7 +60,7 @@ class DisallowMultipleThrowsPerLineSniff implements Sniff
 
         if (str_contains($exceptionTypes, '|')) {
             $types = array_map('trim', explode('|', $exceptionTypes));
-            $types = array_filter($types);
+            $types = array_filter($types, static fn($type): bool => $type !== '');
 
             if (count($types) > 1) {
                 $error = 'Each @throws annotation must contain only one exception type. Found: %s. Use separate @throws for each exception.';

@@ -18,7 +18,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
  * in_array($var, [Value1, Value2, Value3], true)
  * !in_array($var, [Value1, Value2, Value3], true)
  */
-class UseInArraySniff implements Sniff
+final class UseInArraySniff implements Sniff
 {
     /**
      * Minimum number of comparisons to trigger the sniff.
@@ -28,7 +28,7 @@ class UseInArraySniff implements Sniff
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array<int|string>
+     * @return list<int|string>
      */
     public function register(): array
     {
@@ -37,6 +37,9 @@ class UseInArraySniff implements Sniff
 
     /**
      * Processes this test when one of its tokens is encountered.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     public function process(File $phpcsFile, int $stackPtr): void
     {
@@ -99,7 +102,9 @@ class UseInArraySniff implements Sniff
     /**
      * Gets the variable name being compared.
      *
-     * @param bool $left True to get left side, false to get right side
+     * @param File $phpcsFile
+     * @param int  $comparisonPtr
+     * @param bool $left          True to get left side, false to get right side
      *
      * @return string|null The variable name or null if not found
      */
@@ -172,6 +177,9 @@ class UseInArraySniff implements Sniff
     /**
      * Finds the end of the current statement.
      *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
+     *
      * @return int Position of the statement end
      */
     private function findStatementEnd(File $phpcsFile, int $stackPtr): int
@@ -191,7 +199,9 @@ class UseInArraySniff implements Sniff
     /**
      * Finds the next logical operator (|| or &&) after the current position.
      *
-     * @param int|null $endPtr Maximum position to search until
+     * @param File     $phpcsFile
+     * @param int      $stackPtr
+     * @param int|null $endPtr    Maximum position to search until
      *
      * @return false|int Position of the logical operator or false if not found
      */
@@ -208,6 +218,8 @@ class UseInArraySniff implements Sniff
     /**
      * Finds the next comparison of the specified type after the current position.
      *
+     * @param File     $phpcsFile
+     * @param int      $stackPtr
      * @param int      $comparisonType The comparison type to look for (T_IS_IDENTICAL or T_IS_NOT_IDENTICAL)
      * @param int|null $endPtr         Maximum position to search until
      *

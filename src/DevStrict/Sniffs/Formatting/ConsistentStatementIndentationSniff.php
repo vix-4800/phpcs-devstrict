@@ -13,7 +13,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
  * This sniff checks that consecutive statements at the same nesting level
  * have the same indentation.
  */
-class ConsistentStatementIndentationSniff implements Sniff
+final class ConsistentStatementIndentationSniff implements Sniff
 {
     /**
      * The number of spaces for one indentation level.
@@ -85,7 +85,7 @@ class ConsistentStatementIndentationSniff implements Sniff
             $fix = $phpcsFile->addFixableWarning($error, $stackPtr, 'InconsistentIndentation');
 
             if ($fix === true) {
-                $this->fixIndentation($phpcsFile, $stackPtr, $prevIndent);
+                $this->fixIndentation($phpcsFile, $stackPtr, (int) $prevIndent);
             }
         }
     }
@@ -93,6 +93,9 @@ class ConsistentStatementIndentationSniff implements Sniff
     /**
      * Find the previous statement at the same nesting level with same conditions.
      *
+     * @param File            $phpcsFile
+     * @param int             $stackPtr
+     * @param int             $level
      * @param array<int, int> $conditions
      */
     private function findPreviousStatementAtSameLevel(File $phpcsFile, int $stackPtr, int $level, array $conditions): ?int
@@ -159,6 +162,9 @@ class ConsistentStatementIndentationSniff implements Sniff
 
     /**
      * Check if a token is inside a multi-line expression (arrays, function calls, etc.).
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function isInsideMultiLineExpression(File $phpcsFile, int $stackPtr): bool
     {
@@ -197,6 +203,10 @@ class ConsistentStatementIndentationSniff implements Sniff
 
     /**
      * Fix the indentation.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
+     * @param int  $expectedIndent
      */
     private function fixIndentation(File $phpcsFile, int $stackPtr, int $expectedIndent): void
     {

@@ -21,12 +21,12 @@ use PHP_CodeSniffer\Sniffs\Sniff;
  * Good:
  * Use if/else, loops, or early returns instead
  */
-class DisallowGotoStatementSniff implements Sniff
+final class DisallowGotoStatementSniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array<int|string>
+     * @return list<int|string>
      */
     public function register(): array
     {
@@ -35,6 +35,9 @@ class DisallowGotoStatementSniff implements Sniff
 
     /**
      * Processes this test when one of its tokens is encountered.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     public function process(File $phpcsFile, int $stackPtr): void
     {

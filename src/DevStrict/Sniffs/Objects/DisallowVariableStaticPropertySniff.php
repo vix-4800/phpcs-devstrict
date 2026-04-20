@@ -11,7 +11,7 @@ use PHP_CodeSniffer\Util\Tokens;
 /**
  * Disallows accessing static properties via objects (e.g. $object::$property).
  */
-class DisallowVariableStaticPropertySniff implements Sniff
+final class DisallowVariableStaticPropertySniff implements Sniff
 {
     /**
      * {@inheritDoc}
@@ -45,6 +45,9 @@ class DisallowVariableStaticPropertySniff implements Sniff
 
     /**
      * Checks whether the token sequence represents a static property access.
+     *
+     * @param File $phpcsFile
+     * @param int  $doubleColonPtr
      */
     private function isStaticPropertyAccess(File $phpcsFile, int $doubleColonPtr): bool
     {
@@ -62,6 +65,9 @@ class DisallowVariableStaticPropertySniff implements Sniff
 
     /**
      * Finds the variable token that precedes the double colon.
+     *
+     * @param File $phpcsFile
+     * @param int  $doubleColonPtr
      */
     private function findLeadingVariablePtr(File $phpcsFile, int $doubleColonPtr): ?int
     {
@@ -103,6 +109,9 @@ class DisallowVariableStaticPropertySniff implements Sniff
 
     /**
      * Simple matcher to locate the opening parenthesis for a closing parenthesis pointer.
+     *
+     * @param array<int, array<string, mixed>> $tokens
+     * @param int                              $closePtr
      */
     private function findMatchingOpener(array $tokens, int $closePtr): ?int
     {

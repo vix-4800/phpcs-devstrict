@@ -10,7 +10,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 /**
  * Enforces that multi-line method chains keep one call per line and that inline calls aren't mixed in.
  */
-class MethodChainingPerLineSniff implements Sniff
+final class MethodChainingPerLineSniff implements Sniff
 {
     use MethodChainHelperTrait;
 
@@ -44,6 +44,9 @@ class MethodChainingPerLineSniff implements Sniff
 
     /**
      * Ensures there is only one chained call per physical line once the chain spans multiple lines.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function ensureOnlyOneCallPerLine(File $phpcsFile, int $stackPtr): void
     {
@@ -75,6 +78,9 @@ class MethodChainingPerLineSniff implements Sniff
 
     /**
      * Flags inline calls that appear before the first multi-line segment in the same chain.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function flagInlineCallsBefore(File $phpcsFile, int $stackPtr): void
     {
@@ -115,6 +121,9 @@ class MethodChainingPerLineSniff implements Sniff
 
     /**
      * Determines whether the provided operator is the first chained call in its context.
+     *
+     * @param File $phpcsFile
+     * @param int  $operatorPtr
      */
     private function isFirstOperatorInChain(File $phpcsFile, int $operatorPtr): bool
     {
@@ -134,6 +143,10 @@ class MethodChainingPerLineSniff implements Sniff
 
     /**
      * Checks whether two operators share the same chain context (scope and parenthesis nesting).
+     *
+     * @param array<int, array<string, mixed>> $tokens
+     * @param int                              $firstPtr
+     * @param int                              $secondPtr
      */
     private function isSameChainContext(array $tokens, int $firstPtr, int $secondPtr): bool
     {
@@ -143,6 +156,8 @@ class MethodChainingPerLineSniff implements Sniff
 
     /**
      * Creates a comparable context key from nested parenthesis and conditions info.
+     *
+     * @param array<string, mixed> $token
      */
     private function buildContextKey(array $token): string
     {

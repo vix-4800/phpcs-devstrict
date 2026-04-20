@@ -14,12 +14,12 @@ use PHP_CodeSniffer\Sniffs\Sniff;
  * - Model::findOne($id) instead of Model::find()->where(['id' => $id])->one()
  * - Model::findAll($ids) instead of Model::find()->where(['id' => $ids])->all()
  */
-class PreferActiveRecordShortcutsSniff implements Sniff
+final class PreferActiveRecordShortcutsSniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array<int|string>
+     * @return list<int|string>
      */
     public function register(): array
     {
@@ -28,6 +28,9 @@ class PreferActiveRecordShortcutsSniff implements Sniff
 
     /**
      * Processes this test when one of its tokens is encountered.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     public function process(File $phpcsFile, int $stackPtr): void
     {
@@ -123,6 +126,10 @@ class PreferActiveRecordShortcutsSniff implements Sniff
 
     /**
      * Report a violation.
+     *
+     * @param File   $phpcsFile
+     * @param int    $stackPtr
+     * @param string $endMethod
      */
     private function reportViolation(File $phpcsFile, int $stackPtr, string $endMethod): void
     {

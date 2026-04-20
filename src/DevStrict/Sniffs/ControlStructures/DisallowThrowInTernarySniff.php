@@ -10,7 +10,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 /**
  * Disallows usage of `throw` expressions inside ternary operators.
  */
-class DisallowThrowInTernarySniff implements Sniff
+final class DisallowThrowInTernarySniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -22,6 +22,9 @@ class DisallowThrowInTernarySniff implements Sniff
 
     /**
      * Processes this test when one of its tokens is encountered.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     public function process(File $phpcsFile, int $stackPtr): void
     {

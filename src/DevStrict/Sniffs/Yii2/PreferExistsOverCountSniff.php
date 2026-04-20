@@ -23,12 +23,12 @@ use PHP_CodeSniffer\Sniffs\Sniff;
  * - ->count() < 1 should be !->exists()
  * - if (Model::find()->where(...)->one()) should be if (Model::find()->where(...)->exists())
  */
-class PreferExistsOverCountSniff implements Sniff
+final class PreferExistsOverCountSniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array<int|string>
+     * @return list<int|string>
      */
     public function register(): array
     {
@@ -37,6 +37,9 @@ class PreferExistsOverCountSniff implements Sniff
 
     /**
      * Processes this test when one of its tokens is encountered.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     public function process(File $phpcsFile, int $stackPtr): void
     {
@@ -52,6 +55,9 @@ class PreferExistsOverCountSniff implements Sniff
 
     /**
      * Process count() method calls.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function processCount(File $phpcsFile, int $stackPtr): void
     {
@@ -97,17 +103,22 @@ class PreferExistsOverCountSniff implements Sniff
 
     /**
      * Process one() method calls in conditional contexts.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function processOne(File $phpcsFile, int $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
 
         $prevToken = $phpcsFile->findPrevious(T_WHITESPACE, $stackPtr - 1, null, true);
+
         if ($prevToken === false || $tokens[$prevToken]['code'] !== T_OBJECT_OPERATOR) {
             return;
         }
 
         $nextToken = $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
+
         if ($nextToken === false || $tokens[$nextToken]['code'] !== T_OPEN_PARENTHESIS) {
             return;
         }
@@ -119,6 +130,7 @@ class PreferExistsOverCountSniff implements Sniff
         $closeParen = $tokens[$nextToken]['parenthesis_closer'];
 
         $hasArguments = $this->hasArgumentsBetween($phpcsFile, $nextToken, $closeParen);
+
         if ($hasArguments) {
             return;
         }
@@ -136,6 +148,9 @@ class PreferExistsOverCountSniff implements Sniff
 
     /**
      * Check if the method call is used in a conditional context (if, while, etc.).
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function isInConditionalContext(File $phpcsFile, int $stackPtr): bool
     {
@@ -146,8 +161,10 @@ class PreferExistsOverCountSniff implements Sniff
 
             if (in_array($token['code'], [T_IF, T_ELSEIF, T_WHILE, T_DO], true)) {
                 $openParen = $phpcsFile->findNext(T_OPEN_PARENTHESIS, $i, $stackPtr);
+
                 if ($openParen !== false && isset($tokens[$openParen]['parenthesis_closer'])) {
                     $closeParen = $tokens[$openParen]['parenthesis_closer'];
+
                     if ($stackPtr > $openParen && $stackPtr < $closeParen) {
                         return true;
                     }
@@ -164,6 +181,7 @@ class PreferExistsOverCountSniff implements Sniff
         }
 
         $nextToken = $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
+
         if ($nextToken !== false) {
             if ($tokens[$nextToken]['code'] === T_OPEN_PARENTHESIS && isset($tokens[$nextToken]['parenthesis_closer'])) {
                 $nextToken = $phpcsFile->findNext(T_WHITESPACE, $tokens[$nextToken]['parenthesis_closer'] + 1, null, true);
@@ -179,6 +197,10 @@ class PreferExistsOverCountSniff implements Sniff
 
     /**
      * Check if there are any arguments between parentheses.
+     *
+     * @param File $phpcsFile
+     * @param int  $openParen
+     * @param int  $closeParen
      */
     private function hasArgumentsBetween(File $phpcsFile, int $openParen, int $closeParen): bool
     {
@@ -197,6 +219,9 @@ class PreferExistsOverCountSniff implements Sniff
 
     /**
      * Get the comparison type if it's a count existence check.
+     *
+     * @param File $phpcsFile
+     * @param int  $startPtr
      *
      * @return array{operator: string, value: string, shouldNegate: bool}|null
      */
@@ -267,6 +292,8 @@ class PreferExistsOverCountSniff implements Sniff
     /**
      * Report a violation.
      *
+     * @param File                                                       $phpcsFile
+     * @param int                                                        $stackPtr
      * @param array{operator: string, value: string, shouldNegate: bool} $comparison
      */
     private function reportViolation(File $phpcsFile, int $stackPtr, array $comparison): void

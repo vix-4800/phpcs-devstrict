@@ -13,12 +13,12 @@ use PHP_CodeSniffer\Sniffs\Sniff;
  * In Yii2 controllers, use $this->asJson() or $this->asXml() instead of
  * manually setting response format.
  */
-class DisallowResponseFormatAssignmentSniff implements Sniff
+final class DisallowResponseFormatAssignmentSniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array<int|string>
+     * @return list<int|string>
      */
     public function register(): array
     {
@@ -27,6 +27,9 @@ class DisallowResponseFormatAssignmentSniff implements Sniff
 
     /**
      * Processes this test when one of its tokens is encountered.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     public function process(File $phpcsFile, int $stackPtr): void
     {
@@ -104,6 +107,7 @@ class DisallowResponseFormatAssignmentSniff implements Sniff
         }
 
         $valueToken = $phpcsFile->findNext(T_WHITESPACE, $next + 1, null, true);
+
         if ($valueToken === false) {
             return;
         }
@@ -112,10 +116,11 @@ class DisallowResponseFormatAssignmentSniff implements Sniff
         $formatType = null;
 
         if (in_array($tokens[$valueToken]['code'], [T_CONSTANT_ENCAPSED_STRING, T_DOUBLE_QUOTED_STRING], true)) {
-            $value = trim($tokens[$valueToken]['content'], '"\'');
-            if (in_array(strtolower($value), ['json', 'xml'], true)) {
+            $value = mb_trim($tokens[$valueToken]['content'], '"\'');
+
+            if (in_array(mb_strtolower($value), ['json', 'xml'], true)) {
                 $isJsonOrXml = true;
-                $formatType = strtolower($value);
+                $formatType = mb_strtolower($value);
             }
         }
 
@@ -125,8 +130,10 @@ class DisallowResponseFormatAssignmentSniff implements Sniff
 
             if ($doubleColon !== false && $tokens[$doubleColon]['code'] === T_DOUBLE_COLON) {
                 $constantToken = $phpcsFile->findNext(T_WHITESPACE, $doubleColon + 1, null, true);
+
                 if ($constantToken !== false && $tokens[$constantToken]['code'] === T_STRING) {
                     $constantName = $tokens[$constantToken]['content'];
+
                     if ($constantName === 'FORMAT_JSON') {
                         $isJsonOrXml = true;
                         $formatType = 'json';
@@ -136,13 +143,14 @@ class DisallowResponseFormatAssignmentSniff implements Sniff
                     }
                 }
             } else {
-            $constantName = $tokens[$valueToken]['content'];
-            if ($constantName === 'FORMAT_JSON') {
-                $isJsonOrXml = true;
-                $formatType = 'json';
-            } elseif ($constantName === 'FORMAT_XML') {
-                $isJsonOrXml = true;
-                $formatType = 'xml';
+                $constantName = $tokens[$valueToken]['content'];
+
+                if ($constantName === 'FORMAT_JSON') {
+                    $isJsonOrXml = true;
+                    $formatType = 'json';
+                } elseif ($constantName === 'FORMAT_XML') {
+                    $isJsonOrXml = true;
+                    $formatType = 'xml';
                 }
             }
         }

@@ -7,7 +7,7 @@ namespace DevStrict\Sniffs\Yii2;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
-class PreferIsGuestOverUserIdCheckSniff implements Sniff
+final class PreferIsGuestOverUserIdCheckSniff implements Sniff
 {
     public function register(): array
     {

@@ -32,6 +32,9 @@ trait MethodChainHelperTrait
 
     /**
      * Checks if the operator is placed on its own line (i.e. starts a new line in the chain).
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function isMultiLineOperator(File $phpcsFile, int $stackPtr): bool
     {
@@ -47,6 +50,9 @@ trait MethodChainHelperTrait
 
     /**
      * Finds the previous multi-line operator in the same chain, if any.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function findPreviousMultiLineOperator(File $phpcsFile, int $stackPtr): ?int
     {
@@ -82,6 +88,10 @@ trait MethodChainHelperTrait
 
     /**
      * Determines whether the tokens between two operators contain a chain-breaking token at the top level.
+     *
+     * @param File $phpcsFile
+     * @param int  $startPtr
+     * @param int  $endPtr
      */
     private function hasChainBreakBetween(File $phpcsFile, int $startPtr, int $endPtr): bool
     {
@@ -112,7 +122,7 @@ trait MethodChainHelperTrait
                 continue;
             }
 
-            if ((in_array($code, [T_CLOSE_SQUARE_BRACKET, T_CLOSE_SHORT_ARRAY], true)) && $bracketDepth > 0) {
+            if (in_array($code, [T_CLOSE_SQUARE_BRACKET, T_CLOSE_SHORT_ARRAY], true) && $bracketDepth > 0) {
                 --$bracketDepth;
 
                 continue;
@@ -152,6 +162,8 @@ trait MethodChainHelperTrait
 
     /**
      * Checks whether the given token code should break a method chain.
+     *
+     * @param int|string $code
      */
     private function isChainBreakToken(int|string $code): bool
     {
@@ -165,6 +177,9 @@ trait MethodChainHelperTrait
     /**
      * Calculates the parenthesis nesting level for a given token position.
      * This helps distinguish between chains at different nesting depths.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
     private function getParenthesisNestLevel(File $phpcsFile, int $stackPtr): int
     {

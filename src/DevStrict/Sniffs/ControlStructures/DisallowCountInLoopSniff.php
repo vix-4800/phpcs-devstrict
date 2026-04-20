@@ -15,7 +15,7 @@ use ValueError;
  * which causes the count to be recalculated on every iteration.
  * It suggests storing the count in a variable before the loop or using foreach.
  */
-class DisallowCountInLoopSniff implements Sniff
+final class DisallowCountInLoopSniff implements Sniff
 {
     /**
      * Expected number of semicolons in a for loop (init; condition; increment).
@@ -25,7 +25,7 @@ class DisallowCountInLoopSniff implements Sniff
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array<int|string>
+     * @return list<int|string>
      */
     public function register(): array
     {
@@ -34,6 +34,9 @@ class DisallowCountInLoopSniff implements Sniff
 
     /**
      * Processes this test when one of its tokens is encountered.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      *
      * @throws ValueError
      */
@@ -49,6 +52,7 @@ class DisallowCountInLoopSniff implements Sniff
         $closeParenthesis = $tokens[$stackPtr]['parenthesis_closer'];
 
         $semicolons = [];
+
         for ($i = $openParenthesis + 1; $i < $closeParenthesis; ++$i) {
             if ($tokens[$i]['code'] === T_SEMICOLON) {
                 $semicolons[] = $i;
@@ -71,7 +75,7 @@ class DisallowCountInLoopSniff implements Sniff
                 continue;
             }
 
-            $prevToken = $phpcsFile->findPrevious(T_WHITESPACE, $i - 1, null, true);
+            $prevToken = $phpcsFile->findPrevious(T_WHITESPACE, (int) $i - 1, null, true);
 
             if ($prevToken !== false) {
                 $prevTokenCode = $tokens[$prevToken]['code'];
