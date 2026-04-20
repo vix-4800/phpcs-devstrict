@@ -75,6 +75,8 @@ The main ruleset includes all available rules. See [RULES.md](RULES.md) for deta
     Suggest modern string functions (`str_contains()`, `str_starts_with()`, `str_ends_with()`) instead of `strpos()`
 - [`DevStrict.Functions.PreferJsonValidate`](RULES.md#devstrictfunctionspreferjsonvalidate) -
     Suggest `json_validate()` instead of `json_decode()` for validation-only use cases
+- [`DevStrict.PhpDoc.DisallowUnusedTemplate`](RULES.md#devstrictphpdocdisallowunusedtemplate) - Disallow unused
+    PHPDoc `@template` declarations
 - [`DevStrict.Objects.DisallowVariableStaticProperty`](RULES.md#devstrictobjectsdisallowvariablestaticproperty) -
     Forbid `$object::$property` static property access
 

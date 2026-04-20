@@ -20,6 +20,8 @@ This document describes the custom coding standard rules implemented in the DevS
     - [DevStrict.Formatting.MethodChainingPerLine](#devstrictformattingmethodchainingperline)
     - [DevStrict.Formatting.ConsistentStatementIndentation](#devstrictformattingconsistentstatementindentation)
     - [DevStrict.Formatting.DisallowMultipleThrowsPerLine](#devstrictformattingdisallowmultiplethrowsperline)
+  - [PhpDoc](#phpdoc)
+    - [DevStrict.PhpDoc.DisallowUnusedTemplate](#devstrictphpdocdisallowunusedtemplate)
   - [Objects](#objects)
     - [DevStrict.Objects.DisallowVariableStaticProperty](#devstrictobjectsdisallowvariablestaticproperty)
   - [Yii2](#yii2)
@@ -441,6 +443,46 @@ function processData($data): void
 function processData($data): void
 {
     // implementation
+}
+```
+
+---
+
+## PhpDoc
+
+### DevStrict.PhpDoc.DisallowUnusedTemplate
+
+**Type:** Warning
+
+**Description:** Disallows PHPDoc `@template` declarations that are never used by another PHPDoc type in the same
+class, trait, interface, enum, or function scope.
+
+**Bad:**
+
+```php
+/**
+ * @template TModel of ActiveRecord
+ */
+class Repository
+{
+}
+```
+
+**Good:**
+
+```php
+/**
+ * @template TModel of ActiveRecord
+ * @extends BaseRepository<TModel>
+ */
+class Repository extends BaseRepository
+{
+    /**
+     * @return TModel
+     */
+    public function find()
+    {
+    }
 }
 ```
 
