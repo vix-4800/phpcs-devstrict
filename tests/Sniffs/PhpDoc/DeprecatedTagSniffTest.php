@@ -134,6 +134,41 @@ $foo = 1;', self::SNIFF);
         $this->assertNoViolations($result);
     }
 
+    public function testEnumCaseWithDeprecatedTagTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+enum Status
+{
+    /**
+     * @deprecated Use Status::Active instead.
+     */
+    case Old;
+
+    case Active;
+}', self::SNIFF);
+
+        $this->assertContainsWarning(
+            $result,
+            'Use the #[\\Deprecated] attribute instead of the @deprecated docblock tag.',
+        );
+    }
+
+    public function testEnumDeclarationWithDeprecatedTagDoesNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+
+/**
+ * @deprecated
+ */
+enum OldStatus
+{
+    case Active;
+}', self::SNIFF);
+
+        $this->assertNoViolations($result);
+    }
+
     public function testOtherTagsDoNotTriggerWarning(): void
     {
         $result = $this->runPhpcs('<?php

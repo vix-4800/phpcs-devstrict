@@ -45,10 +45,12 @@ final class DeprecatedTagSniff implements Sniff
         $tokenCount = count($tokens);
         $current = $commentCloser + 1;
 
-        // #[\Deprecated] supports functions/methods and class constants, but not classes/traits/interfaces/enums.
+        // #[\Deprecated] supports functions/methods, class constants, and enum cases,
+        // but not class/interface/trait/enum declarations themselves.
         $scopeOwnerTokens = [
             T_FUNCTION => T_FUNCTION,
             T_CONST => T_CONST,
+            T_ENUM_CASE => T_ENUM_CASE,
         ];
 
         $allowedTokens = [
