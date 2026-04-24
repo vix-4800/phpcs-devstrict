@@ -21,6 +21,7 @@ This document describes the custom coding standard rules implemented in the DevS
     - [DevStrict.Formatting.ConsistentStatementIndentation](#devstrictformattingconsistentstatementindentation)
     - [DevStrict.Formatting.DisallowMultipleThrowsPerLine](#devstrictformattingdisallowmultiplethrowsperline)
   - [PhpDoc](#phpdoc)
+    - [DevStrict.PhpDoc.DeprecatedTag](#devstrictphpdocdeprecatedtag)
     - [DevStrict.PhpDoc.DisallowUnusedTemplate](#devstrictphpdocdisallowunusedtemplate)
   - [Objects](#objects)
     - [DevStrict.Objects.DisallowVariableStaticProperty](#devstrictobjectsdisallowvariablestaticproperty)
@@ -449,6 +450,36 @@ function processData($data): void
 ---
 
 ## PhpDoc
+
+### DevStrict.PhpDoc.DeprecatedTag
+
+**Type:** Warning
+
+**Description:** Warns when a `@deprecated` docblock tag is used on a symbol that supports the native
+`#[\Deprecated]` attribute (PHP 8.4+): functions, methods, class constants, and enum cases. Class, interface,
+trait, and enum declarations are excluded because the attribute cannot target them.
+
+**Bad:**
+
+```php
+/**
+ * @deprecated Use newFunction() instead.
+ */
+function oldFunction(): void
+{
+}
+```
+
+**Good:**
+
+```php
+#[\Deprecated('use newFunction() instead')]
+function oldFunction(): void
+{
+}
+```
+
+---
 
 ### DevStrict.PhpDoc.DisallowUnusedTemplate
 
