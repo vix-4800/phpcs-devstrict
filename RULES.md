@@ -23,6 +23,7 @@ This document describes the custom coding standard rules implemented in the DevS
   - [PhpDoc](#phpdoc)
     - [DevStrict.PhpDoc.DeprecatedTag](#devstrictphpdocdeprecatedtag)
     - [DevStrict.PhpDoc.DisallowUnusedTemplate](#devstrictphpdocdisallowunusedtemplate)
+    - [DevStrict.PhpDoc.DisallowVoidMixedWithOtherTypes](#devstrictphpdocdisallowvoidmixedwithothertypes)
   - [Objects](#objects)
     - [DevStrict.Objects.DisallowVariableStaticProperty](#devstrictobjectsdisallowvariablestaticproperty)
   - [Yii2](#yii2)
@@ -515,6 +516,43 @@ class Repository extends BaseRepository
     {
     }
 }
+```
+
+---
+
+### DevStrict.PhpDoc.DisallowVoidMixedWithOtherTypes
+
+**Type:** Error
+
+**Description:** `void` means a function does not return a value. It is semantically invalid to combine `void` with
+any other type in a `@return` tag. Use `void` alone, or omit it and list only the actual return types.
+
+**Bad:**
+
+```php
+/**
+ * @return array|null|void
+ */
+function foo() {}
+
+/**
+ * @return string|void
+ */
+function bar() {}
+```
+
+**Good:**
+
+```php
+/**
+ * @return void
+ */
+function foo(): void {}
+
+/**
+ * @return string|null
+ */
+function bar(): ?string {}
 ```
 
 ---

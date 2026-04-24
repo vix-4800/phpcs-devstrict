@@ -79,6 +79,8 @@ The main ruleset includes all available rules. See [RULES.md](RULES.md) for deta
     docblock tag with the `#[\Deprecated]` attribute (PHP 8.4+) for functions, methods, class constants, and enum cases
 - [`DevStrict.PhpDoc.DisallowUnusedTemplate`](RULES.md#devstrictphpdocdisallowunusedtemplate) - Disallow unused
     PHPDoc `@template` declarations
+- [`DevStrict.PhpDoc.DisallowVoidMixedWithOtherTypes`](RULES.md#devstrictphpdocdisallowvoidmixedwithothertypes) -
+    Disallow `void` combined with other types in `@return` tags
 - [`DevStrict.Objects.DisallowVariableStaticProperty`](RULES.md#devstrictobjectsdisallowvariablestaticproperty) -
     Forbid `$object::$property` static property access
 
