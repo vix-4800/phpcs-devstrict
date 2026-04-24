@@ -76,4 +76,8 @@
     <rule ref="DevStrict.PhpDoc.DisallowUnusedTemplate">
         <type>warning</type>
     </rule>
+
+    <rule ref="DevStrict.PhpDoc.DeprecatedTag">
+        <type>warning</type>
+    </rule>
 </ruleset>
