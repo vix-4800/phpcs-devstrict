@@ -71,6 +71,8 @@ The main ruleset includes all available rules. See [RULES.md](RULES.md) for deta
     Require separate `@throws` annotations for each exception type
 - [`DevStrict.Functions.DisallowCastFunctions`](RULES.md#devstrictfunctionsdisallowcastfunctions) - Use type casts
     instead of `strval()`, `intval()`, `floatval()`, `boolval()`
+- [`DevStrict.Functions.DisallowHttpFileGetContents`](RULES.md#devstrictfunctionsdisallowhttpfilegetcontents) -
+    Forbid `file_get_contents()` for HTTP and HTTPS requests
 - [`DevStrict.Functions.PreferModernStringFunctions`](RULES.md#devstrictfunctionsprefermodernstringfunctions) -
     Suggest modern string functions (`str_contains()`, `str_starts_with()`, `str_ends_with()`) instead of `strpos()`
 - [`DevStrict.Functions.PreferJsonValidate`](RULES.md#devstrictfunctionspreferjsonvalidate) -
