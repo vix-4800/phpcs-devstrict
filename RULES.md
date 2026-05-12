@@ -8,7 +8,6 @@ This document describes the custom coding standard rules implemented in the DevS
   - [Table of Contents](#table-of-contents)
   - [Functions](#functions)
     - [DevStrict.Functions.DisallowCastFunctions](#devstrictfunctionsdisallowcastfunctions)
-    - [DevStrict.Functions.DisallowHttpFileGetContents](#devstrictfunctionsdisallowhttpfilegetcontents)
     - [DevStrict.Functions.PreferModernStringFunctions](#devstrictfunctionsprefermodernstringfunctions)
     - [DevStrict.Functions.PreferJsonValidate](#devstrictfunctionspreferjsonvalidate)
   - [Control Structures](#control-structures)
@@ -65,38 +64,6 @@ $integer = (int) $var;
 $float = (float) $var;
 $boolean = (bool) $var;
 $hex = (int) hexdec($value);
-```
-
----
-
-### DevStrict.Functions.DisallowHttpFileGetContents
-
-**Type:** Error
-
-**Description:** Forbids using `file_get_contents()` for HTTP and HTTPS requests. Reading remote URLs through stream
-wrappers hides network I/O behind a filesystem API, makes timeouts and error handling harder to reason about, and
-usually bypasses the project's real HTTP client abstraction.
-
-**Bad:**
-
-```php
-$response = file_get_contents('https://example.com/api/users');
-
-$context = stream_context_create([
-    'http' => [
-        'method' => 'POST',
-    ],
-]);
-
-$response = file_get_contents($url, false, $context);
-```
-
-**Good:**
-
-```php
-$contents = file_get_contents('/tmp/local-cache.json');
-
-$response = $httpClient->get('https://example.com/api/users');
 ```
 
 ---
