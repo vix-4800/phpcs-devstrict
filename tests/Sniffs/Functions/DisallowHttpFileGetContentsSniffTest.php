@@ -1,0 +1,125 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DevStrict\Tests\Common\Sniffs\Functions;
+
+use DevStrict\Tests\BaseTest;
+
+/**
+ * Tests for DisallowHttpFileGetContentsSniff.
+ *
+ * @internal
+ *
+ * @coversNothing
+ */
+class DisallowHttpFileGetContentsSniffTest extends BaseTest
+{
+    /**
+     * Test that HTTP URL triggers a warning.
+     */
+    public function testHttpUrlTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+$response = file_get_contents("http://example.com/api");', 'DevStrict.Functions.DisallowHttpFileGetContents');
+
+        $this->assertContainsWarning($result, 'HTTP requests');
+        $this->assertContainsWarning($result, 'HTTP client');
+    }
+
+    /**
+     * Test that HTTPS URL triggers a warning.
+     */
+    public function testHttpsUrlTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+$response = file_get_contents(\'https://example.com/api\');', 'DevStrict.Functions.DisallowHttpFileGetContents');
+
+        $this->assertContainsWarning($result, 'file_get_contents()');
+    }
+
+    /**
+     * Test that URL literals are detected case-insensitively.
+     */
+    public function testUrlSchemeIsCaseInsensitive(): void
+    {
+        $result = $this->runPhpcs('<?php
+$response = FILE_GET_CONTENTS("HTTPS://example.com/api");', 'DevStrict.Functions.DisallowHttpFileGetContents');
+
+        $this->assertContainsWarning($result, 'HTTP requests');
+    }
+
+    /**
+     * Test that interpolated HTTP URL triggers a warning.
+     */
+    public function testInterpolatedHttpUrlTriggersWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+$response = file_get_contents("https://$host/api");', 'DevStrict.Functions.DisallowHttpFileGetContents');
+
+        $this->assertContainsWarning($result, 'HTTP requests');
+    }
+
+    /**
+     * Test that local paths do not trigger warnings.
+     */
+    public function testLocalPathDoesNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+$contents = file_get_contents(__DIR__ . "/file.txt");
+$contents = file_get_contents("php://input");', 'DevStrict.Functions.DisallowHttpFileGetContents');
+
+        $this->assertNoViolations($result);
+    }
+
+    /**
+     * Test that dynamic URLs do not trigger warnings.
+     */
+    public function testDynamicUrlDoesNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+$response = file_get_contents($url);', 'DevStrict.Functions.DisallowHttpFileGetContents');
+
+        $this->assertNoViolations($result);
+    }
+
+    /**
+     * Test that methods named file_get_contents do not trigger warnings.
+     */
+    public function testMethodNamedFileGetContentsDoesNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+$response = $client->file_get_contents("https://example.com/api");
+$response = Client::file_get_contents("https://example.com/api");', 'DevStrict.Functions.DisallowHttpFileGetContents');
+
+        $this->assertNoViolations($result);
+    }
+
+    /**
+     * Test that function declarations do not trigger warnings.
+     */
+    public function testFunctionDeclarationDoesNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+function file_get_contents(string $url): string {
+    return $url;
+}', 'DevStrict.Functions.DisallowHttpFileGetContents');
+
+        $this->assertNoViolations($result);
+    }
+
+    /**
+     * Test that later HTTP string arguments do not trigger warnings.
+     */
+    public function testLaterHttpStringArgumentsDoNotTriggerWarning(): void
+    {
+        $result = $this->runPhpcs('<?php
+$response = file_get_contents($path, false, stream_context_create([
+    "http" => [
+        "header" => "Referer: https://example.com",
+    ],
+]));', 'DevStrict.Functions.DisallowHttpFileGetContents');
+
+        $this->assertNoViolations($result);
+    }
+}

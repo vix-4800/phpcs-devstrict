@@ -8,6 +8,7 @@ This document describes the custom coding standard rules implemented in the DevS
   - [Table of Contents](#table-of-contents)
   - [Functions](#functions)
     - [DevStrict.Functions.DisallowCastFunctions](#devstrictfunctionsdisallowcastfunctions)
+    - [DevStrict.Functions.DisallowHttpFileGetContents](#devstrictfunctionsdisallowhttpfilegetcontents)
     - [DevStrict.Functions.PreferModernStringFunctions](#devstrictfunctionsprefermodernstringfunctions)
     - [DevStrict.Functions.PreferJsonValidate](#devstrictfunctionspreferjsonvalidate)
   - [Control Structures](#control-structures)
@@ -64,6 +65,28 @@ $integer = (int) $var;
 $float = (float) $var;
 $boolean = (bool) $var;
 $hex = (int) hexdec($value);
+```
+
+---
+
+### DevStrict.Functions.DisallowHttpFileGetContents
+
+**Type:** Warning
+
+**Description:** Disallows `file_get_contents()` for HTTP requests. Use a proper HTTP client instead so requests have
+explicit timeout, error handling, headers, retries, and testable behavior.
+
+**Bad:**
+
+```php
+$response = file_get_contents('https://example.com/api');
+$response = file_get_contents('http://example.com/feed.xml');
+```
+
+**Good:**
+
+```php
+$response = $httpClient->request('GET', 'https://example.com/api');
 ```
 
 ---
