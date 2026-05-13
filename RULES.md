@@ -269,8 +269,8 @@ try {
 
 **Type:** Error
 
-**Description:** Disallows throwing exceptions within ternary operators. Throwing exceptions in ternary expressions
-reduces code readability and makes error handling less explicit.
+**Description:** Disallows throwing exceptions within ternary and null coalescing operators. Throwing exceptions in
+conditional expressions reduces code readability and makes error handling less explicit.
 
 **Bad:**
 
@@ -280,6 +280,8 @@ $value = $condition
     : throw new Exception('Invalid condition');
 
 $data = $isValid ? getData() : throw new RuntimeException('Invalid data');
+
+$model = Model::findOne($id) ?? throw new NotFoundHttpException('Page not found');
 ```
 
 **Good:**
@@ -294,6 +296,11 @@ if (!$isValid) {
     throw new RuntimeException('Invalid data');
 }
 $data = getData();
+
+$model = Model::findOne($id);
+if ($model === null) {
+    throw new NotFoundHttpException('Page not found');
+}
 ```
 
 ---

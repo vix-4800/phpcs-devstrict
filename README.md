@@ -58,7 +58,7 @@ The main ruleset includes all available rules. See [RULES.md](RULES.md) for deta
 - [`DevStrict.ControlStructures.DisallowGotoStatement`](RULES.md#devstrictcontrolstructuresdisallowgotostatement) -
     Disallow `goto` statements as anti-pattern
 - [`DevStrict.ControlStructures.DisallowThrowInTernary`](RULES.md#devstrictcontrolstructuresdisallowthrowinternary) -
-    No exceptions in ternary operators
+    No exceptions in ternary or null coalescing operators
 - [`DevStrict.ControlStructures.UseInArray`](RULES.md#devstrictcontrolstructuresuseinarray) - Suggest `in_array()` for
     multiple OR comparisons
 - [`DevStrict.Formatting.MethodChainingIndentation`](RULES.md#devstrictformattingmethodchainingindentation) - Enforce

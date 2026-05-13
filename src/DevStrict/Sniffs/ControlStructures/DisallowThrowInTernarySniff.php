@@ -8,7 +8,7 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Disallows usage of `throw` expressions inside ternary operators.
+ * Disallows usage of `throw` expressions inside ternary and null coalescing operators.
  */
 final class DisallowThrowInTernarySniff implements Sniff
 {
@@ -30,21 +30,21 @@ final class DisallowThrowInTernarySniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        $ternaryToken = $phpcsFile->findPrevious(
-            [T_INLINE_THEN, T_INLINE_ELSE, T_SEMICOLON, T_OPEN_CURLY_BRACKET, T_CLOSE_CURLY_BRACKET],
+        $operatorToken = $phpcsFile->findPrevious(
+            [T_INLINE_THEN, T_INLINE_ELSE, T_COALESCE, T_SEMICOLON, T_OPEN_CURLY_BRACKET, T_CLOSE_CURLY_BRACKET],
             $stackPtr - 1,
             null,
             false,
         );
 
-        if ($ternaryToken === false) {
+        if ($operatorToken === false) {
             return;
         }
 
-        $tokenCode = $tokens[$ternaryToken]['code'];
+        $tokenCode = $tokens[$operatorToken]['code'];
 
-        if (in_array($tokenCode, [T_INLINE_THEN, T_INLINE_ELSE], true)) {
-            $error = 'Throwing exceptions inside ternary operators is not allowed.
+        if (in_array($tokenCode, [T_INLINE_THEN, T_INLINE_ELSE, T_COALESCE], true)) {
+            $error = 'Throwing exceptions inside ternary or null coalescing operators is not allowed.
                 Use if-else statement or extract to a separate expression for better readability.';
 
             $phpcsFile->addError($error, $stackPtr, 'Found');

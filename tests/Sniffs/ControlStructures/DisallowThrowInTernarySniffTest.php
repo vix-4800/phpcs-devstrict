@@ -38,6 +38,17 @@ $result = $condition ? "value" : throw new Exception("error");', 'DevStrict.Cont
     }
 
     /**
+     * Test that throw in null coalescing operator triggers an error.
+     */
+    public function testThrowInNullCoalescingTriggersError(): void
+    {
+        $result = $this->runPhpcs('<?php
+$result = $model ?? throw new Exception("error");', 'DevStrict.ControlStructures.DisallowThrowInTernary');
+
+        $this->assertContainsError($result, 'null coalescing');
+    }
+
+    /**
      * Test that throw in regular statement does not trigger error.
      */
     public function testThrowInRegularStatementDoesNotTriggerError(): void
@@ -70,6 +81,17 @@ throw new Exception("error");', 'DevStrict.ControlStructures.DisallowThrowInTern
 function test() {
     throw new Exception("error");
 }', 'DevStrict.ControlStructures.DisallowThrowInTernary');
+
+        $this->assertNoViolations($result);
+    }
+
+    /**
+     * Test that null coalescing without throw does not trigger error.
+     */
+    public function testNullCoalescingWithoutThrowDoesNotTriggerError(): void
+    {
+        $result = $this->runPhpcs('<?php
+$result = $model ?? $default;', 'DevStrict.ControlStructures.DisallowThrowInTernary');
 
         $this->assertNoViolations($result);
     }
